@@ -7,8 +7,8 @@ module.exports.getNickname = (client, message) => {
 }
 
 module.exports.getPosition = (client, member) => {
-    for (let index = 0; index < queue.length; index += 1) {
-      if (queue[index].author.id === member.id) return index;
+    for (let index = 0; index < this.client.queue.length; index += 1) {
+      if (this.client.queue[index].author.id === member.id) return index;
     }
     return -1;
 } 
