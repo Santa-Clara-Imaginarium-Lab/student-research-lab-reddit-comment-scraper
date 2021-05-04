@@ -4,9 +4,9 @@ module.exports.getNickname = ( message) => {
       return member.nickname;
     }
     return member.user.username;
-}
+} 
 
-module.exports.getPosition = ( member) => {
+module.exports.getPosition = ( member) => { 
     for (let index = 0; index < this.client.queue.length; index += 1) {
       if (this.client.queue[index].author.id === member.id) return index;
     }
