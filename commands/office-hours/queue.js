@@ -1,4 +1,5 @@
-const { getPosition, getNickname } = require(`../functions/members.js`);
+const { Command } = require("discord.js-commando");
+const { getPosition, getNickname } = require(`../../functions/members.js`);
 const moment = require(`moment`);
 
 module.exports = class queueCommand extends Command {

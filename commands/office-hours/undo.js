@@ -1,3 +1,4 @@
+const { Command } = require("discord.js-commando");
 module.exports = class undoCommand extends Command {
     constructor(client) {
         super(client, {

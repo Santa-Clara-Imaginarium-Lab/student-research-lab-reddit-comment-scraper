@@ -1,3 +1,4 @@
+const { Command } = require("discord.js-commando");
 module.exports = class clearCommand extends Command {
     constructor(client) {
         super(client, {
@@ -26,7 +27,7 @@ module.exports = class clearCommand extends Command {
 
         this.client.queue.length = 0;
         this.client.error("```nimrod\nThe queue is now empty!", message);
-        message.react(this.client.config.reactions.thumbs);
+        message.react(this.client.config.reactions.THUMBS);
 
     }
 }   

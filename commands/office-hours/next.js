@@ -1,4 +1,5 @@
-const { getPosition } = require(`../functions/members.js`);
+const { Command } = require("discord.js-commando");
+const { getPosition } = require(`../../functions/members.js`);
 
 module.exports = class nextCommand extends Command {
     constructor(client) {

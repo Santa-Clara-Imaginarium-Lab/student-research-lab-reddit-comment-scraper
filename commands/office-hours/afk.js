@@ -1,3 +1,4 @@
+const { Command } = require("discord.js-commando");
 module.exports = class afkCommand extends Command {
     constructor(client) {
         super(client, {
@@ -26,12 +27,12 @@ module.exports = class afkCommand extends Command {
           this.client.onlineTAs[message.author.id].afk = true; // Moves TA to AFK
           message.reply(`You are now AFK. ${this.client.queue.length ? `Hurry back, there are ${this.client.queue.length} people left in the queue.` : ''}`);
           message.guild.channels.cache.get(this.client.config.channels.officehours).send(`${message.author} will be right back! :point_up:`);
-          message.react(ACK);
+          message.react(this.client.config.reactions.THUMBS);
         } else {
           this.client.onlineTAs[message.author.id].afk = false; // Removes TA from being AFK
           message.reply("You are no longer AFK. Now, let's go answer some questions!");
           message.guild.channels.cache.get(this.client.config.channels.officehours).send(`${message.author} is back and ready to answer questions! :wave:`);
-          message.react(ACK);
+          message.react(this.client.config.reactions.THUMBS);
         }
     }
 }

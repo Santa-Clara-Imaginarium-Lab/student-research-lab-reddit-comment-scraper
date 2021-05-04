@@ -1,3 +1,4 @@
+const { Command } = require("discord.js-commando");
 module.exports = class offlineCommand extends Command {
     constructor(client) {
         super(client, {

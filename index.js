@@ -3,12 +3,12 @@ const path = require("path");
 
 const client = new CommandoClient({
   commandPrefix: `${require("./config.json").prefix}`,
-  owner: `${require("./config.json").serverRoles.owner}`,
+  owner: `${require("./config.json").serverRoles.botOwner}`,
 });
 
 client.config = require("./config.json"); 
 client.error = require("./functions/error.js");
-const { log } = require("./functions/log.js"); 
+const { log } = require("./functions/log.js");   
 
 client.queue = [];
 client.dequeue = [];
@@ -18,6 +18,9 @@ client.registry
   .registerDefaultTypes()
   .registerGroups([  
     ["office-hours", "Office Hours"], 
+    ["fun", "Fun"],
+    ["utility", "Utility"],
+    ["music", "Music"]
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
@@ -53,6 +56,7 @@ client.once("ready", () => {
 });
 
 client 
+    .on("error", (error) => { console.error(error); process.exit(1)})
     .on("message", (message) => require("./events/message")(client, message)) 
 
 client.login(client.config.token);  
