@@ -4,7 +4,7 @@ module.exports = class userInfoCommand extends Command {
   constructor(client) {
     super(client, {
       name: "user-info",
-      group: "utility",
+      group: "practicality",
       memberName: "user-info",
       description: "Get general user info",
       throttling: {

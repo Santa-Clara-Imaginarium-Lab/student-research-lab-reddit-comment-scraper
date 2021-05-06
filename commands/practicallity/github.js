@@ -6,7 +6,7 @@ module.exports = class githubCommand extends Command {
   constructor(client) {
     super(client, {
       name: "github",
-      group: "utility",
+      group: "practicality",
       memberName: "github",
       description: "Get a user's GitHub profile!",
       throttling: {

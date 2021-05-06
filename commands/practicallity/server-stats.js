@@ -7,7 +7,7 @@ module.exports = class serverStatsCommand extends Command {
 			name: "server-stats",
 			memberName: "server-stats",
 			description: "Get general server statistics!",
-			group: "utility",
+			group: "practicality",
 			guildOnly: true,
             throttling: {
                 usages: 2,

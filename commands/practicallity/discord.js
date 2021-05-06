@@ -6,7 +6,7 @@ module.exports = class discordCommand extends Command {
         super(client, {
             name: "discord",
             description: "Checks Discord status!",
-            group: "utility",  
+            group: "practicality",  
             memberName: "discord",
             throttling: {
                 usages: 2,

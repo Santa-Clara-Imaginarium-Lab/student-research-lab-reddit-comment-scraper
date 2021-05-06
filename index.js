@@ -19,7 +19,7 @@ client.registry
   .registerGroups([  
     ["office-hours", "Office Hours"], 
     ["fun", "Fun"],
-    ["utility", "Utility"],
+    ["practiality", "Practicality"],
     ["music", "Music"]
   ])
   .registerDefaultGroups()
@@ -50,7 +50,7 @@ client.dispatcher.addInhibitor( (client, msg) => {
 }); 
 
 client.once("ready", () => {
-  client.user.setPresence({activity: { name: `${client.config.prefix}help` }, status: "online"});  
+  client.user.setPresence({activity: { name: `${client.config.prefix}help ⏯️ https://davidjeong.org` }, status: "online"});  
 
   log(client, client.config.channels.auditlogs, { embed: { title: "Hooray!", description: "All commands and events work! ✅", color: "GREEN"}});
 });

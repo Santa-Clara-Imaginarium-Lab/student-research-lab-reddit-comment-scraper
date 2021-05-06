@@ -6,7 +6,7 @@ module.exports = class randomColorCommand extends Command {
     super(client, {
         name: "random-color",  
         description: "Generate a random color!",  
-        group: "utility",
+        group: "practicality",
         memberName: "random-color",
         throttling: {
             usages: 2,

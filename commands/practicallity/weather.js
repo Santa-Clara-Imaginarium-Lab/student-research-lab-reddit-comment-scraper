@@ -8,7 +8,7 @@ module.exports = class weatherCommand extends Command {
     constructor(client) {
 		super(client, {
 		  name: "weather",
-		  group: "utility",
+		  group: "practicality",
 		  memberName: "weather",
 		  description: "Check the weather based on your zip code location!",
 		  throttling: {

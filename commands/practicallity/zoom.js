@@ -6,7 +6,7 @@ module.exports = class ZoomCommand extends Command {
         super(client, {
             name: "zoom",
             description: "Get Zoom Meetings status!",
-            group: "utility",
+            group: "practicality",
             memberName: "zoom",
             throttling: {
                 usages: 2,
