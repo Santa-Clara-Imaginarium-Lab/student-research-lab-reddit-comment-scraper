@@ -1,1 +1,1 @@
-# educord
+# student-research-lab-robot
