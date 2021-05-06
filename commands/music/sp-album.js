@@ -1,15 +1,10 @@
 const { Command } = require("discord.js-commando"); 
-const SpotifyWebApi = require("spotify-web-api-node");
-const spotifyApi = new SpotifyWebApi({
-    clientId: botconfig.spotifyClientId,
-    clientSecret: botconfig.spotifyClientSecret
-});
 
 module.exports = class spotifyAlbumCommand extends Command {
   constructor(client) {
     super(client, {
       name: "sp-album",
-      group: "utility",
+      group: "music",
       memberName: "sp-album",
       description: "Get an album URL from Spotify!",
       throttling: {
@@ -27,12 +22,12 @@ module.exports = class spotifyAlbumCommand extends Command {
   }
 
   async run( message, { album }) { 
-    spotifyApi.clientCredentialsGrant().then(
+    this.client.spotifyApi.clientCredentialsGrant().then(
         function(data) {
             // Save the access token so that it"s used in future calls
-            spotifyApi.setAccessToken(data.body["access_token"]);
+            this.client.spotifyApi.setAccessToken(data.body["access_token"]);
             const query = album.join(" ");
-            spotifyApi.searchTracks(query)
+            this.client.spotifyApi.searchTracks(query)
                 .then(function(data) {
                     console.log(data);
                     try {

@@ -10,6 +10,13 @@ client.config = require("./config.json");
 client.error = require("./functions/error.js");
 const { log } = require("./functions/log.js");   
 
+const SpotifyWebApi = require("spotify-web-api-node");
+const spotifyApi = new SpotifyWebApi({
+    clientId: client.config.api.spotifyClientID,
+    clientSecret: client.config.api.spotifyClientSecret
+});
+
+client.spotifyApi = spotifyApi;
 client.queue = [];
 client.dequeue = [];
 client.onlineTAs = {};
@@ -19,7 +26,7 @@ client.registry
   .registerGroups([  
     ["office-hours", "Office Hours"], 
     ["fun", "Fun"],
-    ["practiality", "Practicality"],
+    ["practicality", "Practicality"],
     ["music", "Music"]
   ])
   .registerDefaultGroups()
