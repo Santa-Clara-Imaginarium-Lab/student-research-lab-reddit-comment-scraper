@@ -9,6 +9,7 @@ module.exports = class githubCommand extends Command {
       group: "practicality",
       memberName: "github",
       description: "Get a user's GitHub profile!",
+      guildOnly: true,
       throttling: {
         usages: 2,
         duration: 5,

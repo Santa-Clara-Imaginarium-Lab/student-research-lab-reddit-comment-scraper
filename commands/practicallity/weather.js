@@ -11,6 +11,7 @@ module.exports = class weatherCommand extends Command {
 		  group: "practicality",
 		  memberName: "weather",
 		  description: "Check the weather based on your zip code location!",
+		  guildOnly: true,
 		  throttling: {
 			usages: 2,
 			duration: 5,

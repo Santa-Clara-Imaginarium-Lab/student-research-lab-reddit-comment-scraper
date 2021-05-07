@@ -8,6 +8,7 @@ module.exports = class discordCommand extends Command {
             description: "Checks Discord status!",
             group: "practicality",  
             memberName: "discord",
+            guildOnly: true,
             throttling: {
                 usages: 2,
                 duration: 5,

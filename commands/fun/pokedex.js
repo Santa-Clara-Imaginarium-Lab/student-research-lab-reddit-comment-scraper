@@ -9,6 +9,7 @@ module.exports = class pokedexCommand extends Command {
       group: "fun",
       memberName: "pokedex",
       description: "Search up your favorite pokemon!",
+      guildOnly: true,
       throttling: {
         usages: 2,
         duration: 5,

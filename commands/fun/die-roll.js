@@ -8,6 +8,7 @@ module.exports = class dieRollCommand extends Command {
           group: "fun",
           memberName: "die-roll",
           description: "Roll two dice to attempt to get snake eyes!",
+          guildOnly: true,
           throttling: {
             usages: 2,
             duration: 5,

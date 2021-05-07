@@ -8,6 +8,7 @@ module.exports = class asciiCommand extends Command {
 		  group: "fun",
 		  memberName: "ascii",
 		  description: "Converts text to ascii!",
+		  guildOnly: true,
 		  throttling: {
 			usages: 2,
 			duration: 5,

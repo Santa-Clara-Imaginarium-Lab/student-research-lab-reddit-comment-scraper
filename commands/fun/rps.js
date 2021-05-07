@@ -7,6 +7,7 @@ module.exports = class rpsCommand extends Command {
           group: "fun",
           memberName: "rps",
           description: "Play rock, paper, scissors with the bot!",
+          guildOnly: true,
           throttling: {
             usages: 2,
             duration: 5,
