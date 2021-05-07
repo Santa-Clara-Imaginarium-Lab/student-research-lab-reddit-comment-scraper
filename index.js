@@ -1,5 +1,5 @@
 const { CommandoClient } = require("discord.js-commando");  
-const path = require("path");    
+const path = require("path");     
 
 const client = new CommandoClient({
   commandPrefix: `${require("./config.json").prefix}`,
@@ -10,17 +10,20 @@ client.config = require("./config.json");
 client.error = require("./functions/error.js");
 const { log } = require("./functions/log.js");   
 
-client.queue = [];
-client.dequeue = [];
-client.onlineTAs = {};
+const SpotifyWebApi = require("spotify-web-api-node");
+const spotifyApi = new SpotifyWebApi({
+    clientId: client.config.api.spotifyClientID,
+    clientSecret: client.config.api.spotifyClientSecret
+});
+
+client.spotifyApi = spotifyApi; 
 
 client.registry
   .registerDefaultTypes()
-  .registerGroups([  
-    ["office-hours", "Office Hours"], 
+  .registerGroups([   
+    ["admins", "Admins"],
     ["fun", "Fun"],
-    ["practiality", "Practicality"],
-    ["music", "Music"]
+    ["practicality", "Practicality"],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
@@ -32,7 +35,7 @@ client.registry
 client.dispatcher.addInhibitor( (client, msg) => {
   try { 
     switch (msg.command.group.name) {
-      case "Office Hours":
+      case "Admins":
         if (!client.config.serverRoles.modRoles.forEach((modRole) => msg.member.roles.cache.has(modRole)) || !msg.author.id === client.config.serverRoles.owner) {
           client.error(`***<@${msg.author.id}>, You don't have permission to use this command***`, msg);
           msg.delete();
@@ -56,7 +59,7 @@ client.once("ready", () => {
 });
 
 client 
-    .on("error", (error) => { console.error(error); process.exit(1)})
-    .on("message", (message) => require("./events/message")(client, message)) 
-
-client.login(client.config.token);  
+    .on("message", (message) => require("./events/message")(client, message))
+    .on("guildMemberAdd", (member) => require("./events/guildMemberAdd")(client, member));
+ 
+client.login(client.config.token); 

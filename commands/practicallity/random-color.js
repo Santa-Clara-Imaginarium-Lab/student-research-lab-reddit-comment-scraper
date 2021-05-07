@@ -8,6 +8,7 @@ module.exports = class randomColorCommand extends Command {
         description: "Generate a random color!",  
         group: "practicality",
         memberName: "random-color",
+        guildOnly: true,
         throttling: {
             usages: 2,
             duration: 5,

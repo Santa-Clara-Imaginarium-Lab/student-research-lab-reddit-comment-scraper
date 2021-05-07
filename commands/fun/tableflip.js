@@ -15,6 +15,7 @@ module.exports = class tableFlipCommand extends Command {
           group: "fun",
           memberName: "tableflip",
           description: "For flipping tables!",
+          guildOnly: true,
           throttling: {
             usages: 2,
             duration: 5,

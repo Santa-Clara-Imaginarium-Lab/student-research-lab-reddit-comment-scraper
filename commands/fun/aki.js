@@ -22,6 +22,7 @@ module.exports = class akiCommand extends Command {
         group: "fun",
         memberName: "aki",
         description: "Play with the akinator!",
+        guildOnly: true,
         throttling: {
           usages: 2,
           duration: 5,

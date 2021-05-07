@@ -7,6 +7,7 @@ module.exports = class userInfoCommand extends Command {
       group: "practicality",
       memberName: "user-info",
       description: "Get general user info",
+      guildOnly: true,
       throttling: {
         usages: 2,
         duration: 5,

@@ -8,6 +8,7 @@ module.exports = class ZoomCommand extends Command {
             description: "Get Zoom Meetings status!",
             group: "practicality",
             memberName: "zoom",
+            guildOnly: true,
             throttling: {
                 usages: 2,
                 duration: 5,
