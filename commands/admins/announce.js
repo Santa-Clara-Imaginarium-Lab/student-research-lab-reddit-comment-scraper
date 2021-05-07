@@ -10,15 +10,13 @@ module.exports = class announceCommand extends Command {
           usages: 2,
           duration: 5,
 			},
-      description: "Make a formatted announcement using Embed data",
-      // format: "announce [#channel] [message goes here]\nannounce edit [message id] [new message]\nannounce append [message id] [text to append\nannounce embed [embed JSON]",
-      // examples: [""],
+      description: "Make a formatted announcement using embed data", 
       args: [
         {
           key: "option",
-          prompt: "Please choose a valid option \`msg, embed, append, edit\`",
+          prompt: "Please choose a valid option \`edit, append, embed\`",
           type: "string",
-          oneOf: ["edit", "append", "embed", "msg"],
+          oneOf: ["edit", "append", "embed"],
         },
         {
           key: "id",
@@ -33,42 +31,77 @@ module.exports = class announceCommand extends Command {
           }
         },
         {
-          key: "body",
-          prompt: "Please provide some body text (embed format)",
+          key: "title",
+          prompt: "Please provide some title text.",
           type: "string",
         },
+
+        {
+          key: "body",
+          prompt: "Please provide some body text.",
+          type: "string",
+        },
+        {
+          key: "color",
+          prompt: "Please provide some color.",
+          type: "string",
+        },
+        {
+  	  key: "image",
+  	  prompt: "Please provide an image URL.",
+	  type: "string",
+        },
+        {
+          key: "footer",
+          prompt: "Please provide some footer text.",
+          type: "string",
+        },
+ 
       ],
     });
   }
 
-  async run(message, { option, id, body }) {
-    const announceChannel = this.client.channels.cache.get(`${id.replace(/</g, "").replace(/>/g, "").replace(/#/g, "")}`);
+  async run(message, { option, id, title, body, color, footer }) {
     switch (option) {
-      case "edit": 
+      case "edit":
+        try {
           message.channel.messages.fetch(id).then((m) => {
             m.edit({
               embed: {
-                description: body, 
+		title: title,
+                description: body,
+		color: color,
+		footer: footer,
+		image: image
               },
             });
-          }); 
+          });
+        } catch (e) {
+          return this.client.error(e + "Channel not found, you must run in same channel as message!", message);
+        }
         break;
-      case "append": 
+      case "append":
+        try {
           message.channel.messages.fetch(id).then((m) => {
             m.edit({
               embed: {
-                description: m.embeds[0].description + " " + body, 
+                description: m.embeds[0].description + " " + body,
               },
             });
-          }); 
+          });
+        } catch (e) {
+          return this.client.error("Channel not found, you must run in same channel as message!", message);
+        }
+        break; 
+      case "embed":
+        try {
+          let announceChannel = this.client.channels.cache.get(`${id.replace(/</g, "").replace(/>/g, "").replace(/#/g, "")}`);
+          announceChannel.send({ embed: { title: title, description: body, footer: footer, image: image, color: color } });
+        } catch (e) {
+          return this.client.error(e, message);
+        }
         break;
-      case "embed":  
-          announceChannel.send({ embed: JSON.parse(body)}); 
-          break;
-      case "msg": 
-          announceChannel.send(body);
- 
-          break;
-    } 
-  } 
+    }
+    message.delete();
+  }
 }; 
