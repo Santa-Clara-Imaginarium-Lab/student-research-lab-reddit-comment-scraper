@@ -15,9 +15,7 @@ const spotifyApi = new SpotifyWebApi({
     clientId: client.config.api.spotifyClientID,
     clientSecret: client.config.api.spotifyClientSecret
 });
-
-client.spotifyApi = spotifyApi; 
-
+ 
 client.registry
   .registerDefaultTypes()
   .registerGroups([   
@@ -61,5 +59,5 @@ client.once("ready", () => {
 client 
     .on("message", (message) => require("./events/message")(client, message))
     .on("guildMemberAdd", (member) => require("./events/guildMemberAdd")(client, member));
- 
+
 client.login(client.config.token); 
