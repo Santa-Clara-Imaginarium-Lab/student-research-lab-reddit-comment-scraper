@@ -36,7 +36,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  "*next": (message) => {
+  `${client.config.prefix}next`: (message) => {
     if (message.channel.id !== client.config.channels.officehours) return;
 
     if (Object.values(onlineTAs).length === 0) {
@@ -73,7 +73,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  "*leave": (message) => {
+  `${client.config.prefix}leave`: (message) => {
     if (client.config.channels.officehours === message.channel.id) {
       if (!contains(message.author)) {
         message.react(NAK);
@@ -94,7 +94,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  "*clear": (message) => {
+  `${client.config.prefix}clear`: (message) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
 
     if (queue.length === 0) {
@@ -118,7 +118,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  "*queue": (message) => {
+  `${client.config.prefix}queue`: (message) => {
     if (client.config.channels.officehours === message.channel.id) {
       message.react(ACK);
 
@@ -164,7 +164,7 @@ exports.cmds = {
    *
    * @param {Object} message - The discord message object to interact with.
    */
-  "*undo": (message) => {
+  `${client.config.prefix}queue`: (message) => {
     if (client.config.channels.tachannel === message.channel.id) {
       if (dequeued.length === 0) {
         message.react(NAK);
@@ -185,7 +185,7 @@ exports.cmds = {
    * @param {string[]} args - The first element in the array should be a number string
    * representing an index in the queue.
    */
-  "*remove": (message, args) => {
+  `${client.config.prefix}undo`: (message, args) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
@@ -223,7 +223,7 @@ exports.cmds = {
    * @param {string[]} args - If provided the first element in the array should be a string number
    * representing a index in the queue to ready up.
    */
-  "*ready": (message, args) => {
+  `${client.config.prefix}ready`: (message, args) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
@@ -281,7 +281,7 @@ exports.cmds = {
    * @param {Object} message - Discord message object to interact with.
    * @param {string[]} args - The extent to which a TA wants to go online.
    */
-  "*online": (message, args) => {
+  `${client.config.prefix}online`: (message, args) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
     if (isOnline(message.author) && !onlineTAs[message.author.id].hidden) {
       message.reply("You are already online.")
@@ -307,7 +307,7 @@ exports.cmds = {
    * @param {Object} message - The discord message object to interact with.
    * @param {string[]} args - The extent to which a TA wants to go offline.
    */
-  "*offline": (message, args) => {
+  `${client.config.prefix}offline`: (message, args) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
@@ -336,7 +336,7 @@ exports.cmds = {
    *
    * @param {Object} message - Discord message object to interact with.
    */
-  "*afk": (message) => {
+  `${client.config.prefix}afk`: (message) => {
     if (client.config.channels.tachannel !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
