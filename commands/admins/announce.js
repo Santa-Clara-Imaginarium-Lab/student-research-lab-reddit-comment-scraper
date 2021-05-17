@@ -96,11 +96,11 @@ module.exports = class announceCommand extends Command {
           message.channel.messages.fetch(id).then((m) => {
             m.edit({
               embed: {
-		title: title,
-                description: body,
-		color: color,
-		footer: footer,
-		image: image
+              title: title,
+                          description: body,
+              color: color,
+              footer: { text: footer},
+              image: { url: image }
               },
             });
           });
