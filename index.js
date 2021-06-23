@@ -10,11 +10,7 @@ client.config = require("./config.json");
 client.error = require("./functions/error.js");
 const { log } = require("./functions/log.js");   
 
-const SpotifyWebApi = require("spotify-web-api-node");
-const spotifyApi = new SpotifyWebApi({
-    clientId: client.config.api.spotifyClientID,
-    clientSecret: client.config.api.spotifyClientSecret
-});
+const SpotifyWebApi = require("spotify-web-api-node"); 
  
 client.registry
   .registerDefaultTypes()

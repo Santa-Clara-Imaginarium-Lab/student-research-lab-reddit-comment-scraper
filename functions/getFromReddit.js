@@ -3,11 +3,11 @@ module.exports.run = async (client) => {
   const request = require('request');
   const entities = require('entities');
   const validUrl = require('valid-url');
-  const log = require(`./log.js`);
+  const { log } = require(`./log.js`);
   const botReady = true; 
   
   const feedMSG = {
-    title: `${client.config.api.subreddit} Feed Ready!`,
+    title: `r/${client.config.api.subreddit} Feed Ready!`,
     description: `[/r/${client.config.api.subreddit}](https://reddit.com/r/${client.config.api.subreddit}) feed works! ✅`,
     color: "GREEN", 
     timestamp: new Date()
