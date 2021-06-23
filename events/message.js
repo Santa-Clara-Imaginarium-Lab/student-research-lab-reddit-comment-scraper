@@ -164,7 +164,7 @@ module.exports = async (client, message) => {
           break; 
     
         default:
-          await message.react(":x:");
+          await message.react("❌");
           await message.delete({ timeout: 3000 });
           break;
         }
