@@ -52,6 +52,8 @@ client.once("ready", () => {
   client.user.setPresence({activity: { name: `${client.config.prefix}help ⏯️ https://davidjeong.org` }, status: "online"});  
 
   log(client, client.config.channels.auditlogs, { embed: { title: "Hooray!", description: "All commands and events work! ✅", color: "GREEN"}});
+
+  require("../functions/getFromReddit.js").run(client); //start reddit module in ready event 
 });
 
 client 
