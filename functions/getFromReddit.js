@@ -19,7 +19,7 @@ module.exports.run = async (client) => {
   setInterval(() => {
     if (botReady) {
       request({
-        url: `https://reddit.com/r/${client.config.api.subreddit}`,
+        url: `https://reddit.com/r/${client.config.api.subreddit}/new.json?limit=10`,
         json: true,
       }, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -48,5 +48,5 @@ module.exports.run = async (client) => {
         }
       });
     }
-  }, 1800 * 1000); // get 5 new posts every 10 minutes!
+  }, 600 * 1000); // get 10 new posts every 10 minutes!
 }
