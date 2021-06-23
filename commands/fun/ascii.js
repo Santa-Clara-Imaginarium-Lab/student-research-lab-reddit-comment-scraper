@@ -8,29 +8,18 @@ module.exports = class asciiCommand extends Command {
 		  group: "fun",
 		  memberName: "ascii",
 		  description: "Converts text to ascii!",
-		  guildOnly: true,
 		  throttling: {
 			usages: 2,
 			duration: 5,
 		  },
-		  args: [
-			{
-			  key: "text",
-			  prompt: "Enter string!",
-			  type: "string", 
-			  validate: ((text) => {
-				  if(text.length > 9) {
-					  return "Please do at least 9 words at a time! It'll look better!";
-				  }
-			  })
-			},
-		  ],
 		});
 	  }
 
-    async run ( message, { text }){
+    async run ( message ) {
 
-        text = message.content.slice(6).split(" ").join(" ");
+        let text = message.content.split(" ").slice(1).join(" ");
+
+	if (!text || text.length > 13) return message.channel.send("You didn't say any text or the given text wasn't within 12 characters!");
 
         figlet.text(text, function (err, data) {  
             message.channel.send({ embed: { description: `\`\`\`${data}\`\`\` `}});
