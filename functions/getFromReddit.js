@@ -5,8 +5,8 @@ module.exports.run = async (client) => {
   const entities = require("entities");
   const validUrl = require("valid-url");
   const { log } = require(`./log.js`);
-  const botReady = true;  
-  const lastTimestamp = Math.floor(Date.now() / 1000);
+  let botReady = true;  
+  let lastTimestamp = Math.floor(Date.now() / 1000);
   
   const feedMSG = {
     title: `r/${client.config.api.subreddit} Feed Ready!`,
@@ -30,7 +30,6 @@ module.exports.run = async (client) => {
           const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachment below!`).setFooter(lastTimestamp)
 
           for (const post of body.data.children.reverse()) {
-            const lastTimestamp = post.data.created_utc;
             if (lastTimestamp <= post.data.created_utc) {
               lastTimestamp = post.data.create_utc;
 
