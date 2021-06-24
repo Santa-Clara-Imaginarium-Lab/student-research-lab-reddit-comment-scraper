@@ -5,8 +5,7 @@ module.exports.run = async (client) => {
   const entities = require("entities");
   const validUrl = require("valid-url");
   const { log } = require(`./log.js`);
-  let botReady = true;  
-  let lastTimestamp = Math.floor(Date.now() / 1000);
+  const botReady = true; 
   
   const feedMSG = {
     title: `r/${client.config.api.subreddit} Feed Ready!`,
@@ -26,13 +25,10 @@ module.exports.run = async (client) => {
         url: `https://reddit.com/r/${client.config.api.subreddit}/${getSortBy}.json?limit=10`, //every time, randomize between new, random, top, or rising for more varied posts
         json: true,
       }, (error, response, body) => {
-        if (!error && response.statusCode === 200) { 
-          const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachment below!`).setFooter(lastTimestamp)
-
+        if (!error && response.statusCode === 200) {
           for (const post of body.data.children.reverse()) {
+            const lastTimestamp = post.data.created_utc;
             if (lastTimestamp <= post.data.created_utc) {
-              lastTimestamp = post.data.create_utc;
-
               /*
                 The Reddit Metadata Template: 
                   - [Day of Week, Month, Day Number, Year (Time Zone)]
@@ -44,19 +40,19 @@ module.exports.run = async (client) => {
               */
 
               let redditPostTemplate = `[${new Date(post.data.created_utc * 1000)}], [${post.data.subreddit_name_prefixed}], [${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ""}${entities.decodeHTML(post.data.title)}], `;
-                redditPostTemplate += `[https://redm.it/${post.data.id}}], [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], `; 
-                redditPostTemplate += `[${validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : "no thumbnail shown"}], [${post.data.is_self ? "self post" : "link post"} by ${post.data.author}]`;
+              redditPostTemplate += `[https://redm.it/${post.data.id}}], [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], `; 
+              redditPostTemplate += `[${validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : "no thumbnail shown"}], [${post.data.is_self ? "self post" : "link post"} by ${post.data.author}]`;
 
               const filePath = `./redditPosts/${post.data.id}.txt`; //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi
-
+              
               fs.appendFileSync(filePath, redditPostTemplate, function (err) {
                 if (err) console.log(err); 
               });
 
+              const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachment below!`).setTimestamp()
+
               redditEmbed.attachFiles(filePath);
               log(client, client.config.channels.reddit, redditEmbed);
-
-              ++lastTimestamp;
             } 
           }
         } else {
