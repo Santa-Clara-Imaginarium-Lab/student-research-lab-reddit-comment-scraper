@@ -1,5 +1,6 @@
-module.exports.run = async (client, message) => {
-  const { MessageEmbed } = require(`discord.js`);
+module.exports.run = async (client) => {
+  const { MessageEmbed } = require("discord.js");
+  const fs = require("fs");
   const request = require("request");
   const entities = require("entities");
   const validUrl = require("valid-url");
@@ -17,30 +18,34 @@ module.exports.run = async (client, message) => {
   log(client, client.config.channels.auditlogs, { embed: feedMSG });
 
    setInterval(() => {
+    const sortBy = ["new", "top", "hot", "rising"];
+    const getSortBy = sortBy[Math.floor(Math.random() * sortBy.length)];
     if (botReady) {
       request({
-        url: `https://reddit.com/r/${client.config.api.subreddit}/new.json?limit=10`, //could switch to either new, random, top, or rising 
+        url: `https://reddit.com/r/${client.config.api.subreddit}/${getSortBy}.json?limit=10`, //every time, randomize between new, random, top, or rising for more varied posts
         json: true,
       }, (error, response, body) => {
         if (!error && response.statusCode === 200) {
           for (const post of body.data.children.reverse()) {
             const lastTimestamp = post.data.created_utc;
             if (lastTimestamp <= post.data.created_utc) {
-              const redditPost = new MessageEmbed()
-              .setColor(client.config.school_color)
-              .setAuthor(`${post.data.subreddit_name_prefixed}`, client.user.displayAvatarURL()) //displays author's username
-              .setTitle(`${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ''}${entities.decodeHTML(post.data.title)}`) // gets the post's title
-              .setURL(`https://redd.it/${post.data.id}`) //attaches URL of reddit post here
-              .setDescription(`${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}`) // posts descriptions; anything over 2048 is appended with ellipses
-              .setThumbnail(validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : null)
-              .setFooter(`${post.data.is_self ? "Self Post" : "Link Post"} by /u/${post.data.author}`) // determines if author's post is a self post or link post
-              .setTimestamp(new Date(post.data.created_utc * 1000)) //gets time relative to one's time zone (e.g. PST) when the author posted
+              let redditPostTemplate = `[${new Date(post.data.created_utc * 1000)}], [${post.data.subreddit_name_prefixed}], [${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ''}${entities.decodeHTML(post.data.title)}], [https://redd.it/${post.data.id}}],` + 
+                ` [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], [${validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : "no thumbnail shown"}]`;
 
-              log(client, client.config.channels.reddit, redditPost);
+              const filePath = `./redditPosts/${post.data.id}.txt`;
+
+              fs.appendFileSync(filePath, redditPostTemplate, function (err) {
+                if (err) console.log(err); 
+              });
+
+              const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachement below!`)
+
+              redditEmbed.attachFiles(filePath);
+              log(client, client.config.channels.reddit, redditEmbed);
             } 
           }
         } else {
-          log(client, client.config.channels.auditlogs, { embed: { description: `Request failed - Reddit could be down or the subreddit doesn"t exist. Will continue.`, color: client.config.school_color}});
+            log(client, client.config.channels.auditlogs, { embed: { description: `Request failed - Reddit could be down or the subreddit doesn"t exist. Will continue.`, color: client.config.school_color}});
         }
       });
     }
