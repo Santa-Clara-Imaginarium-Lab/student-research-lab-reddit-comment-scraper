@@ -32,13 +32,13 @@ module.exports.run = async (client) => {
               let redditPostTemplate = `[${new Date(post.data.created_utc * 1000)}], [${post.data.subreddit_name_prefixed}], [${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ''}${entities.decodeHTML(post.data.title)}], [https://redd.it/${post.data.id}}],` + 
                 ` [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], [${validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : "no thumbnail shown"}]`;
 
-              const filePath = `./redditPosts/${post.data.id}.txt`;
+              const filePath = `./redditPosts/${post.data.id}.txt`; //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi
 
               fs.appendFileSync(filePath, redditPostTemplate, function (err) {
                 if (err) console.log(err); 
               });
 
-              const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachement below!`)
+              const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachment below!`).setTimestamp()
 
               redditEmbed.attachFiles(filePath);
               log(client, client.config.channels.reddit, redditEmbed);
