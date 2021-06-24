@@ -34,7 +34,15 @@ module.exports.run = async (client) => {
             if (lastTimestamp <= post.data.created_utc) {
               lastTimestamp = post.data.create_utc;
 
-              //The Reddit Template: [Time], [Subreddit Name], [[Subreddit Post Flair] [Post Title]], [Subreddit Post ID], [Subreddit Post Description], [Subreddit Post Thumbnail (defaults to "none" if none)], [Self post or Link Post by Subreddit Post Author]
+              /*
+                The Reddit Metadata Template: 
+                  - [Day of Week, Month, Day Number, Year (Time Zone)]
+                  - [Subreddit Name], [[Subreddit Post Flair] [Post Title]]
+                  - [Subreddit Post ID]
+                  - [Subreddit Post Description]
+                  - [Subreddit Post Thumbnail (defaults to "none" if none)]
+                  - [Self post or Link Post by Subreddit Post Author]
+              */
 
               let redditPostTemplate = `[${new Date(post.data.created_utc * 1000)}], [${post.data.subreddit_name_prefixed}], [${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ""}${entities.decodeHTML(post.data.title)}], `;
                 redditPostTemplate += `[https://redm.it/${post.data.id}}], [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], `; 
