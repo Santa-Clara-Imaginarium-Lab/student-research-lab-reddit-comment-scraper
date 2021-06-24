@@ -1,5 +1,5 @@
-module.exports.run = async (client) => {
-  const { MessageEmbed } = require("discord.js");
+module.exports.run = async (client, message) => {
+  const { MessageEmbed } = require(`discord.js`);
   const fs = require("fs");
   const request = require("request");
   const entities = require("entities");
@@ -29,30 +29,34 @@ module.exports.run = async (client) => {
           for (const post of body.data.children.reverse()) {
             const lastTimestamp = post.data.created_utc;
             if (lastTimestamp <= post.data.created_utc) {
+
               /*
                 The Reddit Metadata Template: 
                   - [Day of Week, Month, Day Number, Year (Time Zone)]
-                  - [Subreddit Name], [[Subreddit Post Flair] [Post Title]]
+                  - [Subreddit Name] | [Subreddit Subscriber Count]
+                  - [[Subreddit Post Flair] [Post Title]]
                   - [Subreddit Post ID]
                   - [Subreddit Post Description]
-                  - [Subreddit Post Thumbnail (defaults to "none" if none)]
-                  - [Self post or Link Post by Subreddit Post Author]
+                  - [Subreddit Post Thumbnail (defaults to "null" if none)]
+                  - [Self post or Link Post by Subreddit Post Author] | [Amount of Upvotes] | [Amount of Downvotes] | [Amount of Comments]
               */
 
-              let redditPostTemplate = `[${new Date(post.data.created_utc * 1000)}], [${post.data.subreddit_name_prefixed}], [${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ""}${entities.decodeHTML(post.data.title)}], `;
-              redditPostTemplate += `[https://redm.it/${post.data.id}}], [${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}], `; 
-              redditPostTemplate += `[${validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : "no thumbnail shown"}], [${post.data.is_self ? "self post" : "link post"} by ${post.data.author}]`;
+              const redditPost = new MessageEmbed()
+                .setColor(client.config.school_color)
+                .setAuthor(`${post.data.subreddit_name_prefixed} | ${post.data.subreddit_subscribers} Subscribers`, client.user.displayAvatarURL()) //displays author's username
+                .setTitle(`${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ""}${entities.decodeHTML(post.data.title)}`) // gets the post's title
+                .setURL(`https://redd.it/${post.data.id}`) //attaches URL of reddit post here
+                .setDescription(`${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}`) // posts descriptions; anything over 2048 is appended with ellipses
+                .setThumbnail(validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : null)
+                .setFooter(`[${post.data.is_self ? "Self Post" : "Link Post"} by /u/${post.data.author}] | [${post.data.ups} 👍] | [${post.data.downs} 👎 ] | [${post.data.num_comments} 📃]`) // determines if author's post is a self post or link post
+                .setTimestamp(new Date(post.data.created_utc * 1000)) //gets time relative to one's time zone (e.g. PST) when the author posted
 
-              const filePath = `./redditPosts/${post.data.id}.txt`; //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi
-              
-              fs.appendFileSync(filePath, redditPostTemplate, function (err) {
-                if (err) console.log(err); 
-              });
+              const filePath = `./redditPosts/${post.data.id}.txt`; //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi 
+              const stringedRedditPost = JSON.stringify(redditPost); 
+              fs.writeFileSync(filePath, stringedRedditPost, {"encoding": "utf-8"}); 
+              redditPost.attachFiles(filePath);
 
-              const redditEmbed = new MessageEmbed().setColor(client.config.school_color).setTitle(`**REDDIT POST!**`).setDescription(`Here's your new Reddit post attachment below!`).setTimestamp()
-
-              redditEmbed.attachFiles(filePath);
-              log(client, client.config.channels.reddit, redditEmbed);
+              log(client, client.config.channels.reddit, redditPost);
             } 
           }
         } else {
