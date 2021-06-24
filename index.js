@@ -9,9 +9,7 @@ const client = new CommandoClient({
 client.config = require("./config.json"); 
 client.error = require("./functions/error.js");
 const { log } = require("./functions/log.js");   
-
-const SpotifyWebApi = require("spotify-web-api-node"); 
- 
+  
 client.registry
   .registerDefaultTypes()
   .registerGroups([   
@@ -49,7 +47,7 @@ client.once("ready", () => {
 
   log(client, client.config.channels.auditlogs, { embed: { title: "Hooray!", description: "All commands and events work! ✅", color: "GREEN"}});
 
-  require("./functions/getFromReddit.js").run(client); //start reddit module in ready event 
+  require("./functions/getFromReddit.js").run(client, message); //start reddit module in ready event 
 });
 
 client 

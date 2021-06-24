@@ -1,4 +1,4 @@
-module.exports.run = async (client) => {
+module.exports.run = async (client, message) => {
   const { MessageEmbed } = require(`discord.js`);
   const request = require("request");
   const entities = require("entities");
@@ -30,7 +30,7 @@ module.exports.run = async (client) => {
                 const redditPost = new MessageEmbed()
                 .setColor(client.config.school_color)
                 .setAuthor(`${post.data.subreddit_name_prefixed}`, client.user.displayAvatarURL()) //displays author's username
-                .setTitle(`${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ""}${entities.decodeHTML(post.data.title)}`) // gets the post's title
+                .setTitle(`${post.data.link_flair_text ? `[${post.data.link_flair_text}] ` : ''}${entities.decodeHTML(post.data.title.length > 256 ? post.data.title.slice(0, 256).concat('...') : '')}`) // gets the post's title
                 .setURL(`https://redd.it/${post.data.id}`) //attaches URL of reddit post here
                 .setDescription(`${post.data.is_self ? entities.decodeHTML(post.data.selftext.length > 2048 ? post.data.selftext.slice(0, 2048).concat("...") : post.data.selftext) : ""}`) // posts descriptions; anything over 2048 is appended with ellipses
                 .setThumbnail(validUrl.isUri(post.data.thumbnail) ? entities.decodeHTML(post.data.thumbnail) : null)
@@ -47,6 +47,6 @@ module.exports.run = async (client) => {
       }
     }, 600 * 1000); // get 10 new posts every 10 minutes!
   } catch (err) {
-      if (err) return this.client.error("Here is the error!", message);
+      if (err) return client.error("Here is the error!", message);
   }
 }
