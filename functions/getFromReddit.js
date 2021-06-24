@@ -1,4 +1,4 @@
-module.exports.run = async (client, message) => {
+module.exports.run = async (client) => {
   const { MessageEmbed } = require(`discord.js`);
   const fs = require("fs");
   const request = require("request");
