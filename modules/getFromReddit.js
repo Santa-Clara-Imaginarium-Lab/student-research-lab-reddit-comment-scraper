@@ -1,11 +1,11 @@
 module.exports.run = async (client) => {
-  const { MessageEmbed } = require(`discord.js`);
-  const prettier = require("prettier");
+  const { MessageEmbed } = require(`discord.js`); 
+  const json2csv = require("json2csv");
   const fs = require("fs");
   const request = require("request");
   const entities = require("entities");
   const validUrl = require("valid-url");
-  const { log } = require(`./log.js`);
+  const { log } = require(`../functions/log.js`);
   const botReady = true; 
   
   const feedMSG = {
@@ -52,10 +52,10 @@ module.exports.run = async (client) => {
                 .setFooter(`[${post.data.is_self ? "Self Post" : "Link Post"} by /u/${post.data.author}] | [${post.data.ups} 👍] | [${post.data.downs} 👎 ] | [${post.data.num_comments} 📃]`) // determines if author's post is a self post or link post
                 .setTimestamp(new Date(post.data.created_utc * 1000)) //gets time relative to one's time zone (e.g. PST) when the author posted
 
-              const filePath = `./redditPosts/${post.data.id}.txt`; //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi 
-              const stringedRedditPost = prettier.format(JSON.stringify(redditPost),{ semi: false, parser: "json" });  //sends prettified json object of the discord message embed 
-              fs.writeFileSync(filePath, stringedRedditPost, {"encoding": "utf-8"});  //writes to text file ; might make this a csv file for better organization perhaps
-              redditPost.attachFiles(filePath); //attaches file to each respective redditPost embed that's sent every 10 minutes
+              //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi   
+              
+              fs.writeFileSync(`./redditPosts/${post.data.id}.csv`, json2csv.parse(redditPost), {"encoding": "utf-8"});  //writes to text file ; might make this a csv file for better organization perhaps
+              redditPost.attachFiles(`./redditPosts/${post.data.id}.csv`); //attaches file to each respective redditPost embed that's sent every 10 minutes
 
               log(client, client.config.channels.reddit, redditPost); //sends to the #reddit-feed channel 
             } 

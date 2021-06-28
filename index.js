@@ -1,6 +1,6 @@
 const { CommandoClient } = require("discord.js-commando");  
-const path = require("path");     
-const { CLIENT_RENEG_LIMIT } = require("tls");
+const path = require("path");      
+const fs = require("fs");
 
 const client = new CommandoClient({
   commandPrefix: `${require("./config.json").prefix}`,
@@ -44,11 +44,24 @@ client.dispatcher.addInhibitor( (client, msg) => {
 }); 
 
 client.once("ready", () => {
-  client.user.setPresence({activity: { name: `${client.config.prefix}help ⏯️ https://davidjeong.org` }, status: "online"});  
+  client.user.setPresence({activity: { name: `${client.config.prefix}help ⏯️ http://davidjeong.org` }, status: "online"});  
 
-  log(client, client.config.channels.auditlogs, { embed: { title: "Hooray!", description: "All commands and events work! ✅", color: "GREEN"}});
+  log(client, client.config.channels.auditlogs, { embed: { title: "Hooray!", description: "All commands and events work! ✅", color: "GREEN"}}); 
 
-  require("./functions/getFromReddit.js").run(client); //start reddit module in ready event 
+  fs.readdir("./modules", (err, files) => {
+    log(client, client.config.channels.auditlogs, { embed: { title: "Services", description: `Found  ${Object.keys(client.config.services).length} services :white_check_mark:`, color: "GREEN"}});
+    files.forEach((file) => {
+      if (!file.includes("js")) return;
+      let eventFunction = require(`./modules/${file}`);
+      let eventName = file.split(".")[0];
+      if (client.config.services[eventName]) {
+        eventFunction.run(client);
+        log(client, client.config.channels.auditlogs, { embed: { title: "Service started!", description: `Started ${eventName} service :white_check_mark:`, color: "GREEN"}});
+      } else {
+          log(client, client.config.channels.auditlogs, { embed: { title: "Service disabled!", description: `Disabled ${eventName} service :white_check_mark:`, color: "RED"}});
+      }
+    });
+  }); 
 });
 
 client 
