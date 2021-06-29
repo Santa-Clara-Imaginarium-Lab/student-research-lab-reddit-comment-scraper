@@ -42,8 +42,7 @@ module.exports.run = async (client) => {
                   - [Subreddit Post Thumbnail (defaults to "null" if none)]
                   - [Self post or Link Post by Subreddit Post Author] | [Amount of Upvotes] | [Amount of Downvotes] | [Amount of Comments]
               */
-
-                
+ 
               const redditPost = new MessageEmbed()
               .setColor(client.config.school_color)
               .setAuthor(`${post.data.subreddit_name_prefixed} | ${post.data.subreddit_subscribers} Subscribers`, client.user.displayAvatarURL()) //displays author's username
