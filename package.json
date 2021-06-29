@@ -31,12 +31,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JAVA9620/student-research-lab-robot.git"
+    "url": "git+https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot.git"
   },
   "author": "Jason Vu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JAVA9620/student-research-lab-robot/issues"
+    "url": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot/issues"
   },
-  "homepage": "https://github.com/JAVA9620/student-research-lab-robot#readme"
+  "homepage": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot#readme"
 }
