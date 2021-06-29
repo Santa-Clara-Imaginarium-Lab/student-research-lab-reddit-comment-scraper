@@ -1,6 +1,7 @@
 module.exports.run = async (client) => {
   const { MessageEmbed } = require(`discord.js`); 
   const json2csv = require("json2csv");
+  const moment = require("moment");
   const fs = require("fs");
   const request = require("request");
   const entities = require("entities");
@@ -52,10 +53,12 @@ module.exports.run = async (client) => {
                 .setFooter(`[${post.data.is_self ? "Self Post" : "Link Post"} by /u/${post.data.author}] | [${post.data.ups} 👍] | [${post.data.downs} 👎 ] | [${post.data.num_comments} 📃]`) // determines if author's post is a self post or link post
                 .setTimestamp(new Date(post.data.created_utc * 1000)) //gets time relative to one's time zone (e.g. PST) when the author posted
 
-              //gets post data id of the post and names it as such appended by ".txt" in my /redditPosts/ file directory on my Raspberry Pi   
+              //gets post data id of the post and names it as such appended by ".csv" in my /redditPosts/ file directory on my Raspberry Pi   
               
-              fs.writeFileSync(`./redditPosts/${post.data.id}.csv`, json2csv.parse(redditPost), {"encoding": "utf-8"});  //writes to text file ; might make this a csv file for better organization perhaps
-              redditPost.attachFiles(`./redditPosts/${post.data.id}.csv`); //attaches file to each respective redditPost embed that's sent every 10 minutes
+              // get file name to be this format: [date_post-flair_post-data-id.csv]
+
+              fs.writeFileSync(`./redditPosts/${moment(post.data.created_utc * 1000).format("YYYY-DD-MM")}_${post.data.link_flair_text}_${post.data.id}.csv`, json2csv.parse(redditPost), {"encoding": "utf-8"});  //writes to text file ; made this a csv file for better file readability and organization
+              redditPost.attachFiles(`./redditPosts/${moment(post.data.created_utc * 1000).format("YYYY-DD-MM")}_${post.data.link_flair_text}_${post.data.id}.csv`); //attaches file to each respective redditPost embed that's sent every 10 minutes
 
               log(client, client.config.channels.reddit, redditPost); //sends to the #reddit-feed channel 
             } 
