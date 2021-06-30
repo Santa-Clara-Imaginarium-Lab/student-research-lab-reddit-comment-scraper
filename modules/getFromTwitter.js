@@ -15,7 +15,7 @@ module.exports.run = async (client) => {
         const params = {
             q: "Pat Bev", // search term
             count: 12 // how many tweets back
-        }
+        };
     
         TwitterInstance.get("search/tweets", params, function (err, data, response) {
             if (!err && response.statusCode === 200) { 
@@ -26,9 +26,9 @@ module.exports.run = async (client) => {
                 log(client, client.config.channels.twitter, redditPost) // sends messagee embed to #twitter-feed
             } else {
                 console.log(err);
-            }
+            };
         });
     }, 600 * 1000); // gets 10 posts every 10 minutes
-}
+};
 
 // wouldn't be flagged for being bot  and/or hacker

@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const toTitleCase = require("to-title-case");
-const moment = require("moment"); //here is a change in the file
+const dayjs = require("dayjs"); //here is a change in the file
 const { MessageEmbed } = require("discord.js"); 
 const { Command } = require("discord.js-commando");
 
@@ -66,8 +66,8 @@ module.exports = class weatherCommand extends Command {
 		.addField("Latitude", `${body.coord.lat}`, true)
 		.addField("Longitude", `${body.coord.lon}`, true)
 		.addField("\u200B", "\u200B", true)
-		.addField("Sunrise", moment.unix(body.sys.sunrise).format("MM-DD-YYYY, (h:mm A) "), true)
-		.addField("Sunset", moment.unix(body.sys.sunset).format("MM-DD-YYYY, (h:mm A) "), true)
+		.addField("Sunrise", dayjs.unix(body.sys.sunrise).format("MM-DD-YYYY, (h:mm A) "), true)
+		.addField("Sunset", dayjs.unix(body.sys.sunset).format("MM-DD-YYYY, (h:mm A) "), true)
 		.setFooter("Created by the server lords!")
 		.setTimestamp();
 
