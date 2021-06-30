@@ -68,7 +68,7 @@ module.exports.run = async (client) => {
                       url: `https://reddit.com/${comment.permalink}` }
                     }
                   ))
-                }).catch(err => console.log(err));  
+                }).catch({statusCode: 429}, function() {}); //use snoowrap function and ignore all 429 errors  
               // gets post data id of the post and names it as such appended by ".csv" in my /redditPosts/ file directory on my Raspberry Pi   
               // get file name to be this format: [date_post-flair_post-data-id.csv]
 
