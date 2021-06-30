@@ -61,7 +61,7 @@ module.exports.run = async (client) => {
                   redditFetch.getSubmission(post.data.id).expandReplies()
                   .then(thread => {  // comment format: [ [author flair text] [comment body] by (comment author name) posted on (comment date) from (comment url)]
                     thread.comments.forEach((comment) => //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
-                      console.log(`[[${comment.body.author_flair_text || "no flair"}] ${comment.body}] by ${comment.author.name} posted on ${dayjs(post.data.created_utc * 1000).format("YYYY-DD-MM")} from http://reddit.com/r${comment.permalink}`))
+                      console.log(`[[${comment.body.author_flair_text || "no flair"}] ${comment.body}] by ${comment.author.name} posted on ${dayjs(post.data.created_utc * 1000).format("YYYY-DD-MM")} from http://reddit.com${comment.permalink}`))
                   }).catch({statusCode: 429}, function() {}); //use snoowrap function and ignore all 429 errors  
                 // gets post data id of the post and names it as such appended by ".csv" in my /redditPosts/ file directory on my Raspberry Pi   
                 // get file name to be this format: [date_post-flair_post-data-id.csv]
