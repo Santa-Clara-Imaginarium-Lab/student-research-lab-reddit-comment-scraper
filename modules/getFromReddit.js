@@ -70,15 +70,15 @@ module.exports.run = async (client) => {
                     //gather submission comment thread's replies and outputs content of each comment assuming there is at least one comment
                     redditFetch.getSubmission(post.data.id).expandReplies()
                     .then(thread => {  // comment format: [ [author flair text] [comment body] by (comment author name) posted on (comment date) from (comment permalink)]
-                      thread.comments.forEach((comment) => console.log(`[ [${comment.body.author_flair_text || "none"}] ${comment.body}] by ${comment.author.name} posted on ${moment(post.data.created_utc * 1000).format("MM-DD-YYYY")} from ${comment.permalink}`))
+                      thread.comments.forEach((comment) => console.log(`[ [${comment.body.author_flair_text || "no comment body author flair"}] ${comment.body}] by ${comment.author.name} posted on ${moment(post.data.created_utc * 1000).format("YYYY-DD-MM")} from ${comment.permalink}`))
                     }).catch(err => console.log(err));  
                   }, 5000 )
   
                   //gets post data id of the post and names it as such appended by ".csv" in my /redditPosts/ file directory on my Raspberry Pi   
                   // get file name to be this format: [date_post-flair_post-data-id.csv]
     
-                  fs.writeFileSync(`./redditPosts/${moment(post.data.created_utc * 1000).format("MM-DD-YYYY")}_${post.data.link_flair_text}_${post.data.id}.csv`, json2csv.parse(redditPost), {"encoding": "utf-8"});  //writes to text file ; made this a csv file for better file readability and organization
-                  redditPost.attachFiles(`./redditPosts/${moment(post.data.created_utc * 1000).format("MM-DD-YYYY")}_${post.data.link_flair_text}_${post.data.id}.csv`); //attaches file to each respective redditPost embed that's sent every 10 minutes
+                  fs.writeFileSync(`./redditPosts/${moment(post.data.created_utc * 1000).format("YYYY-DD-MM")}_${post.data.link_flair_text || "no_flair"}_${post.data.id}.csv`, json2csv.parse(redditPost), {"encoding": "utf-8"});  //writes to text file ; made this a csv file for better file readability and organization
+                  redditPost.attachFiles(`./redditPosts/${moment(post.data.created_utc * 1000).format("YYYY-DD-MM")}_${post.data.link_flair_text || "no_flair"}_${post.data.id}.csv`); //attaches file to each respective redditPost embed that's sent every 10 minutes
     
                   log(client, client.config.channels.reddit, redditPost); //sends to the #reddit-feed channel  
                 } 
