@@ -228,10 +228,10 @@ module.exports.run = async (client) => {
 
                         let results_csv = post.name + "|||" + post.url + "|||" + post.score + "|||" + 
                             post.title + "|||" + post.subreddit.display_name + "|||" + comment.author.name + "|||" +
-                            user_anon_score_obj.email_is_verified + "|||" + user_anon_score_obj.score + "|||" +
-                            comment.name + "|||" + comment.created_utc + "|||" + comment_text + "|||" + 
-                            comment.score + "|||" + sentiment_scores.neg + "|||" + sentiment_scores.neu + "|||" +
-                            sentiment_scores.pos + "|||" + sentiment_scores.compound + "|||" + pos_score_weig + "\n";
+                            userAnonScoreObj.email_is_verified + "|||" + userAnonScoreObj.score + "|||" +
+                            comment.name + "|||" + comment.created_utc + "|||" + commentText + "|||" + 
+                            comment.score + "|||" + sentimentScores.neg + "|||" + sentiment_scores.neu + "|||" +
+                            sentimentScores.pos + "|||" + sentimentScores.compound + "|||" + posScoreWeight + "\n";
 
                         stream.write(results_csv);
                     }
