@@ -2,7 +2,7 @@ module.exports.run = async (client) => {
   //packages, external libraries, and functions I need to properly garner information
   const { MessageEmbed } = require(`discord.js`); // powerful library for interacting with the Discord API
   const json2csv = require("json2csv"); // convert json to csv
-  const dayjs = require("dayjs"); // JavaScript date library for parsing, validating, manipulating, and formatting datess
+  const dayjs = require("dayjs"); // JavaScript date library for parsing, validating, manipulating, and formatting dates
   const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
   const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
   const request = require("request"); // simplest way to make http calls [deprecated library but who cares xd - it works!]

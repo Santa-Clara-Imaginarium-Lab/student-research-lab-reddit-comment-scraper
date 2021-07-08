@@ -1,12 +1,12 @@
 module.exports.run = async (client) => {
     const subreddits = require("../functions/subredditList.js"); 
-    const snoowrap = require("snoowrap");
-    const fs = require("fs");
-    const moment = require("moment"); 
+    const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
+    const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
+    const moment = require("moment"); // JavaScript date library for parsing, validating, manipulating, and formatting datess
     const subredditsList = subreddits.array; 
-    const getPostLimit = 50;
-    const getCommentsLimit = 30;
-    const requestDelay = 1200;
+    const getPostLimit = 50; // limit to 50 reddit posts
+    const getCommentsLimit = 30; // limit to get 30 comments per thread
+    const requestDelay = 5000; // delay request to 5 seconds 
 
     // Pass in a username and password for script-type apps.
     const redditFetch = new snoowrap({
