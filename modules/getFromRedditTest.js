@@ -1,9 +1,12 @@
 module.exports.run = async (client) => {
-    const subreddits = require("../functions/subredditList.js"); 
+    const subreddits = require("../functions/subredditList.js"); //references list of wanted subreddits here
     const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
     const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
-    const moment = require("moment"); // JavaScript date library for parsing, validating, manipulating, and formatting datess
+    const dayjs = require("dayjs"); // JavaScript date library for parsing, validating, manipulating, and formatting dates 
     const subredditsList = subreddits.array; 
+    const json2csv = require("json2csv"); // convert json to csv
+    const entities = require("entities"); // decodes html entities (e.g. &amp; becomes &, &quot; becomes ", &lt becomes <, &gt; becomes >)
+    const vader = require("vader-sentiment"); // Javascript port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a Node.js app.
     const getPostLimit = 50; // limit to 50 reddit posts
     const getCommentsLimit = 30; // limit to get 30 comments per thread
     const requestDelay = 5000; // delay request to 5 seconds 
@@ -51,124 +54,17 @@ module.exports.run = async (client) => {
         if (newScore > 10) newScore = 10;
 
         return newScore;
-    }
-
-    async function userEmailVerified (username) {
-        const emailIsVerified = false;
-
-        const trophies = await redditFetch.getUser(username).getTrophies();
-        
-        for (const i = 0; i < trophies.trophies.length; i++) {
-            if (trophies.trophies[i].award_id === "o") {
-                emailIsVerified = true;
-                break;
-            }
-        }
-        return emailIsVerified;
-    }
-
-    async function karmaToCakedayRatio(username) {
-        let now, createdMoment, createdDaysAgo, karma;
-
-        let userCreatedUtc = await redditFetch.getUser(username).fetch().created_utc;
-
-        now = moment();
-        createdMoment = moment.unix(userCreatedUtc);
-        //Converts UTC created time to days ago that account was created
-        createdDaysAgo = now.diff(createdMoment, "days");
-
-        karma = await redditFetch.getUser(username).comment_karma;
-
-        if (karma < 0) {
-            return 0;
-        } else {
-            return karma / createdDaysAgo;
-        }
-    }
-
-    function usernameBreakdown(username) {
-        let containsSex = false, containsGender = false;
-    
-        let s = username.toLowerCase()
-    
-        if (s.includes("boy") || s.includes("girl") || s.includes("man") || 
-            s.includes("woman") || s.includes("men") || s.includes("women")) {
-                containsSex = true;
-        }
-
-        if (s.includes("guy") || s.includes("male") || s.includes("female") || s.includes("gay") || s.includes("lesbian") || 
-            s.includes("transs") || s.includes("transg") || s.includes("gender") || s.includes("queer") ||
-            s.includes("sexual") || s.includes("binary") || s.includes("cis")) {
-                containsGender = true;
-        }
-    
-        let object = {
-            containsSex: containsSex,
-            containsGender: containsGender
-        }
-    
-        return object;
-    }
-
-    async function anonScore (username) {
-        //anonymous scores start at 10
-        let score = 10, emailIsVerified = false, karmaRatio, usernameInfo;
-        
-        if (username === "[deleted]") {
-            emailIsVerified = false;
-        } else if (userEmailVerified (username)) {
-            emailIsVerified = true;
-            score -= 1;
-        }
-
-        //Can't use comment to cake day ratio because API limits comments to 25 posts
-
-        if (username !== "[deleted]") {
-            //instead, use karma to cake day ratio
-
-            karmaRatio = karmaToCakedayRatio (username);
-
-            if (karmaRatio >= 10) score -= 3;
-            else if (karmaRatio >= 8) score -= 2.75;
-            else if (karmaRatio >= 6) score -= 2.50;
-            else if (karmaRatio >= 4) score -= 2.25;
-            else if (karmaRatio >= 2) score -= 2.00;
-            else if (karmaRatio >= 1.50) score -= 1.50;
-            else if (karmaRatio >= 1.00) score -= 1.00;
-            else if (karmaRatio >= 0.66) score -= 0.50;
-            else if (karmaRatio >= 0.33) score -= 0.25;
-            else if (karmaRatio > 0) score -= 0.10;
-
-            usernameInfo = usernameBreakdown (username);
-
-            if (usernameInfo.containsSex) {
-                score -= 3;
-            } 
-
-            if (usernameInfo.containsGender) {
-                score -= 3;
-            }   
-        }
-
-        if (score < 0) score = 0;
-
-        let object = {
-            emailIsVerified: emailIsVerified,
-            score: score
-        };
-
-        return object;
     } 
-
+  
      async function scrapeSubreddit() {
         let scrapedPosts = [];
         let data = []; 
         let tempIndex;
 
-        for (const i = 0; i < subredditsList.length; i++) {
-            for (const j = 0; j < getPostLimit; j++) {
+        for (let i = 0; i < subredditsList.length; i++) {
+            for (let j = 0; j < getPostLimit; j++) {
                 // get random post from subreddit
-                const post = await redditFetch.getRandomSubmission(subredditList[i]);
+                const post = await redditFetch.getRandomSubmission(subredditsList[i]);
 
                 if (!post.id) {
                     console.log(`Searching in subreddit: r/${subredditsList[i]}`);
@@ -177,13 +73,14 @@ module.exports.run = async (client) => {
                     j--;
                     continue;
                 } else {
-                    let scrapedComments = []; 
-                    const stream = fs.createWriteStream(`./redditComments/${dayjs(post.data.created_utc * 1000).format("YYYY-DD-MM")}_${post.data.link_flair_text || "no_flair"}_${post.data.id}.csv`, { flags: "a"});
+                    let scrapedComments = [];  
 
                     //Now, we should grab all of the comments under that post
                     console.log(`Found random post ID: ${post.name}`);
 
-                    for (const k = 0; k < post.num_comments; k++) {
+                    scrapedPosts.push(post.name);
+
+                    for (let k = 0; k < post.num_comments; k++) {
                         tempIndex = getRandomInt(post.num_comments);
 
                         if (scrapedComments.includes(tempIndex)) continue;
@@ -201,48 +98,43 @@ module.exports.run = async (client) => {
                         const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(comment.body);
                         let commentText = comment.body.replace(/[\n\r]+/g, " ");
 
-                        userAnonScoreObj = anonScore (comment.author.name);
                         posScoreWeight = weightedScore (sentimentScores.pos, comment.score, post.score + post.num_comments);
                         
-                        const results = {
+                        /* The pos, neu, and neg scores are ratios for proportions of text that fall in each category (so these should all add up to be 1... or close 
+                        to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
+                        
+                        const results = { 
+                            SUBREDDIT_NAME: post.subreddit.display_name,
+                            USER_NAME: comment.author.name,  
+                            POST_TITLE: post.title,
+                            POST_TEXT: entities.decodeHTML(post.selftext),
                             POST_ID: post.name,
                             POST_URL: post.url,
                             POST_UPVOTES: post.score,
-                            POST_TITLE: post.title,
-                            SUBREDDIT_NAME: post.subreddit.display_name,
-                            USER_NAME: comment.author.name,
-                            USER_EMAIL_VERIFIED: userAnonScoreObj.emailIsVerified,
-                            USER_ANON_SCORE: userAnonScoreObj.score,
                             COMMENT_ID: comment.name,
-                            COMMENT_CREATED_UTC: comment.created_utc,
-                            COMMENT_TEXT: commentText,
+                            COMMENT_CREATED_UTC: dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"),
+                            COMMENT_TEXT: entities.decodeHTML(commentText),
                             COMMENT_UPVOTES: comment.score,
-                            COMMENT_NEG_SCORE: sentimentScores.neg,
-                            COMMENT_NEU_SCORE: sentimentScores.neu,
-                            COMMENT_POS_SCORE: sentimentScores.pos,
-                            COMMENT_COMP_SCORE: sentimentScores.compound,
+                            COMMENT_NEG_SCORE: sentimentScores.neg, // compound score <= -0.05
+                            COMMENT_NEU_SCORE: sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
+                            COMMENT_POS_SCORE: sentimentScores.pos, // compound score >= 0.05
+                            COMMENT_COMP_SCORE: sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
                             COMMENT_POS_SCORE_WEIGHTED: posScoreWeight
-                        };
+                        }; 
 
                         data.push(results);
 
-                        let results_csv = post.name + "|||" + post.url + "|||" + post.score + "|||" + 
-                            post.title + "|||" + post.subreddit.display_name + "|||" + comment.author.name + "|||" +
-                            userAnonScoreObj.email_is_verified + "|||" + userAnonScoreObj.score + "|||" +
-                            comment.name + "|||" + comment.created_utc + "|||" + commentText + "|||" + 
-                            comment.score + "|||" + sentimentScores.neg + "|||" + sentiment_scores.neu + "|||" +
-                            sentimentScores.pos + "|||" + sentimentScores.compound + "|||" + posScoreWeight + "\n";
 
-                        stream.write(results_csv);
-                    }
-                } 
-
-            j = 0;
+                        const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // writes to text file ; made this a csv file for better file readability and organization); 
+                        stream.write(json2csv.parse(results));
+                    } 
+                }   
+            }    
             
-            }   
-
-            console.log(`... Done. Successfully scraped ${data.length} comments.`)
+            j = 0; 
         }
+        
+        console.log(`... Done. Successfully scraped ${data.length} comments.`)
     }
     scrapeSubreddit();
 }
