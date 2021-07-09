@@ -2,8 +2,8 @@
 
 ![student research lab robot!](https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot/blob/main/assets/educord.png?raw=true?style=centerme) 
 
-- Using mixed-method approach in Dr. Jeong's lab to study social media interactions and ethical implications of emerging media tech.
+- Using mixed-method approach in Dr. David Jeong's lab to study social media interactions as well as ethical implications of emerging media technology.
 
-- Utilizing web-scraping techniques to collect/archive large quantities of Reddit, Instagram, and Twitter content for research analysis.
+- Utilizing web-scraping techniques to collect and archive large quantities of Reddit, Instagram, and Twitter user-generated content for social media analysis.
 
 - Maintaining and developing Discord server and professional webpage for research team.
