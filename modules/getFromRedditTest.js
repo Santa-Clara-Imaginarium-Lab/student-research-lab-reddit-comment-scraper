@@ -18,7 +18,7 @@ module.exports.run = async (client) => {
         password: client.config.api.subreddit.password // my reddit password
     });
 
-    redditFetch.config({ requestDelay: requestDelay}); // delay request to 5 seconds  
+    redditFetch.config({ requestDelay: 5000}); // delay request to 5 seconds  
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
