@@ -104,26 +104,25 @@ module.exports.run = async (client) => {
                         to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
                         
                         const results = { 
-                            SUBREDDIT_NAME: post.subreddit.display_name,
-                            USER_NAME: comment.author.name,  
-                            POST_TITLE: post.title,
-                            POST_TEXT: entities.decodeHTML(post.selftext),
-                            POST_ID: post.name,
-                            POST_URL: post.url,
-                            POST_UPVOTES: post.score,
-                            COMMENT_ID: comment.name,
-                            COMMENT_CREATED_UTC: dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"),
-                            COMMENT_TEXT: entities.decodeHTML(commentText),
-                            COMMENT_UPVOTES: comment.score,
-                            COMMENT_NEG_SCORE: sentimentScores.neg, // compound score <= -0.05
-                            COMMENT_NEU_SCORE: sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
-                            COMMENT_POS_SCORE: sentimentScores.pos, // compound score >= 0.05
-                            COMMENT_COMP_SCORE: sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
-                            COMMENT_POS_SCORE_WEIGHTED: posScoreWeight
+                            "SUBREDDIT NAME": post.subreddit.display_name,
+                            "USER NAME": comment.author.name,  
+                            "POST TITLE": post.title,
+                            "POST TEXT": entities.decodeHTML(post.selftext),
+                            "POST ID": post.name,
+                            "POST URL": post.url,
+                            "POST UPVOTES": post.score,
+                            "COMMENT ID": comment.name,
+                            "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"),
+                            "COMMENT TEXT": entities.decodeHTML(commentText),
+                            "COMMENT UPVOTES": comment.score,
+                            "NEG COMMENT SCORE": sentimentScores.neg, // compound score <= -0.05
+                            "NEU COMMENT SCORE": sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
+                            "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05
+                            "COMP COMMENT SCORE": sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
+                            "WEIGHTED POS COMMENT SCORE": posScoreWeight
                         }; 
 
-                        data.push(results);
-
+                        data.push(results); 
 
                         const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // writes to text file ; made this a csv file for better file readability and organization); 
                         stream.write(json2csv.parse(results));
