@@ -8,11 +8,9 @@ module.exports.run = async (client) => {
     const entities = require("entities"); // decodes html entities (e.g. &amp; becomes &, &quot; becomes ", &lt becomes <, &gt; becomes >)
     const vader = require("vader-sentiment"); // Javascript port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a Node.js app.
     const getPostLimit = 50; // limit to 50 reddit posts
-    const getCommentsLimit = 30; // limit to get 30 comments per thread
-    const requestDelay = 5000; // delay request to 5 seconds 
-
-    // Pass in a username and password for script-type apps.
-    const redditFetch = new snoowrap({
+    const getCommentsLimit = 30; // limit to get 30 comments per thread  
+    
+    const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
         userAgent: client.config.api.subreddit.user_agent, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
         clientId: client.config.api.subreddit.client_id, // client id needed to access Reddit’s API as a script application
         clientSecret: client.config.api.subreddit.client_secret, // client secret needed to access Reddit’s API as a script application
@@ -20,11 +18,11 @@ module.exports.run = async (client) => {
         password: client.config.api.subreddit.password // my reddit password
     });
 
-    redditFetch.config({ requestDelay: requestDelay}); 
+    redditFetch.config({ requestDelay: requestDelay}); // delay request to 5 seconds  
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
-    }
+    };
 
     function weightedScore ( positiveScore, upvotes, postImpressions) {
         let newScore, upvoteRatio;
@@ -33,41 +31,41 @@ module.exports.run = async (client) => {
         newScore = positiveScore * 10;
 
         if (upvoteRatio < 0.20) {
-            newScore = newScore + 1.5;
+            newScore +=  1.5;
         } else if (upvoteRatio < 0.25) {
-            newScore = newScore + 2;
+            newScore += 2;
         } else if (upvoteRatio < 0.30) {
-            newScore = newScore + 2.5;
+            newScore += 2.5;
         } else if (upvoteRatio < 0.35) {
-            newScore = newScore + 2.5;
+            newScore += 2.5;
         } else if (upvoteRatio < 0.45) {
-            newScore = newScore + 3.0;
+            newScore += 3.0;
         } else if (upvoteRatio < 0.55) {
-            newScore = newScore + 3.5;
+            newScore += 3.5;
         } else if (upvoteRatio < 0.65) {
-            newScore = newScore + 4.0;
+            newScore += 4.0;
         } else {
-            newScore = newScore + 5;
+            newScore += 5.0;
         } 
         
         if (newScore > 10) newScore = 10; // Maximum weighted score is 10
 
         return newScore;
-    } 
+    }; 
   
-     async function scrapeSubreddit() {
+    async function scrapeSubreddit() {
         let scrapedPosts = [];
         let data = []; 
         let tempIndex;
 
-        for (let i = 0; i < subredditsList.length; i++) {
-            for (let j = 0; j < getPostLimit; j++) { 
+        for (let i = 0; i < subredditsList.length; i++) { // loop through amount of subreddits defined in module exports file
+            for (let j = 0; j < getPostLimit; j++) {  // loop through amount of posts as specified by the static limit
                 const post = await redditFetch.getRandomSubmission(subredditsList[i]); // get random post from subreddit
 
                 if (!post.id) {
                     console.log(`Searching in subreddit: r/${subredditsList[i]}`);
                     continue;
-                } else if (scrapedPosts.includes(post.id)) {
+                } else if (scrapedPosts.includes(post.id)) { // if scraped posts array already includes the post id, decrement j then continue to last control flow  statement
                     j--;
                     continue;
                 } else {
@@ -78,18 +76,15 @@ module.exports.run = async (client) => {
                     scrapedPosts.push(post.name);
 
                     for (let k = 0; k < post.num_comments; k++) {
-                        tempIndex = getRandomInt(post.num_comments);
-
-                        if (scrapedComments.includes(tempIndex)) continue;
-
+                        tempIndex = getRandomInt(post.num_comments); 
+                        if (scrapedComments.includes(tempIndex)) continue; 
                         scrapedComments.push(tempIndex);
 
                         if(!post.comments[tempIndex]) break; // We take a maximum of 20 comments per post
                         else if (k === getCommentsLimit) break;
                         else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
 
-                        let comment = post.comments[tempIndex];
-
+                        let comment = post.comments[tempIndex]; 
                         const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(comment.body);
                         let commentText = comment.body.replace(/[\n\r]+/g, " ");
 
@@ -121,16 +116,16 @@ module.exports.run = async (client) => {
 
                         data.push(results); 
 
-                        const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // writes to text file ; made this a csv file for better file readability and organization); 
-                        stream.write(json2csv.parse(results));
-                    } 
-                }   
-            }    
+                        const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+                        stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization); 
+                    }; 
+                };   
+            };    
             
             j = 0; 
-        }
+        };
         
         console.log(`... Done. Successfully scraped ${data.length} comments.`);
-    }
-    scrapeSubreddit();
-}
+    };
+    scrapeSubreddit(); //scrapes across all posts and comments throughout the subreddits listed in the module export without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds
+};
