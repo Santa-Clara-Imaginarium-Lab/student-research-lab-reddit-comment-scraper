@@ -48,10 +48,9 @@ module.exports.run = async (client) => {
             newScore = newScore + 4.0;
         } else {
             newScore = newScore + 5;
-        }
-
-        //Maximum weighted score is 10
-        if (newScore > 10) newScore = 10;
+        } 
+        
+        if (newScore > 10) newScore = 10; // Maximum weighted score is 10
 
         return newScore;
     } 
@@ -62,9 +61,8 @@ module.exports.run = async (client) => {
         let tempIndex;
 
         for (let i = 0; i < subredditsList.length; i++) {
-            for (let j = 0; j < getPostLimit; j++) {
-                // get random post from subreddit
-                const post = await redditFetch.getRandomSubmission(subredditsList[i]);
+            for (let j = 0; j < getPostLimit; j++) { 
+                const post = await redditFetch.getRandomSubmission(subredditsList[i]); // get random post from subreddit
 
                 if (!post.id) {
                     console.log(`Searching in subreddit: r/${subredditsList[i]}`);
@@ -75,8 +73,7 @@ module.exports.run = async (client) => {
                 } else {
                     let scrapedComments = [];  
 
-                    //Now, we should grab all of the comments under that post
-                    console.log(`Found random post ID: ${post.name}`);
+                    console.log(`Found random post ID: ${post.name}`);  // Now, we should grab all of the comments under that post
 
                     scrapedPosts.push(post.name);
 
@@ -87,11 +84,9 @@ module.exports.run = async (client) => {
 
                         scrapedComments.push(tempIndex);
 
-                        if(!post.comments[tempIndex]) break;
-                        // We take a maximum of 20 comments per post
-                        else if (k == getCommentsLimit) break;
-                        // It avoids comments from bots
-                        else if (post.comments[tempIndex].author.name === "AutoModerator") continue;
+                        if(!post.comments[tempIndex]) break; // We take a maximum of 20 comments per post
+                        else if (k === getCommentsLimit) break;
+                        else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
 
                         let comment = post.comments[tempIndex];
 
@@ -104,22 +99,24 @@ module.exports.run = async (client) => {
                         to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
                         
                         const results = { 
-                            "SUBREDDIT NAME": post.subreddit.display_name,
-                            "USER NAME": comment.author.name,  
-                            "POST TITLE": post.title,
-                            "POST TEXT": entities.decodeHTML(post.selftext),
-                            "POST ID": post.name,
-                            "POST URL": post.url,
-                            "POST UPVOTES": post.score,
-                            "COMMENT ID": comment.name,
-                            "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"),
-                            "COMMENT TEXT": entities.decodeHTML(commentText),
-                            "COMMENT UPVOTES": comment.score,
+                            "SUBREDDIT NAME": post.subreddit.display_name, // displayed name of subreddit
+                            "USER NAME": comment.author.name,   // displayed reddit username of author
+                            "POST TITLE": entities.decodeHTML(post.title), // post title
+                            "POST  CREATED": dayjs(post.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the post was created in this format: 2021-09-07 11:41:00 PM
+                            "POST TEXT": entities.decodeHTML(post.selftext), // post body
+                            "POST ID": post.name, // post id
+                            "POST URL": post.url, // post uniform resource locator
+                            "POST UPVOTES": post.score,  // amount of upvotes on post
+                            "POST COMMENT AMOUNT": post.num_comments, // amount of comments on the post
+                            "COMMENT ID": comment.name, // comment id
+                            "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
+                            "COMMENT TEXT": entities.decodeHTML(commentText), // comment body
+                            "COMMENT UPVOTES": comment.score, // amount of upvotes on comment
                             "NEG COMMENT SCORE": sentimentScores.neg, // compound score <= -0.05
                             "NEU COMMENT SCORE": sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
                             "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05
                             "COMP COMMENT SCORE": sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
-                            "WEIGHTED POS COMMENT SCORE": posScoreWeight
+                            "WEIGHTED POS COMMENT SCORE": posScoreWeight // calculate positive weighted comment score out of 10 points maximum
                         }; 
 
                         data.push(results); 
@@ -133,7 +130,7 @@ module.exports.run = async (client) => {
             j = 0; 
         }
         
-        console.log(`... Done. Successfully scraped ${data.length} comments.`)
+        console.log(`... Done. Successfully scraped ${data.length} comments.`);
     }
     scrapeSubreddit();
 }
