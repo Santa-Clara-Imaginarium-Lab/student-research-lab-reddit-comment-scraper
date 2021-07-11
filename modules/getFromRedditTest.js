@@ -97,7 +97,7 @@ module.exports.run = async (client) => {
                             "SUBREDDIT NAME": post.subreddit.display_name, // displayed name of subreddit
                             "USER NAME": comment.author.name,   // displayed reddit username of author
                             "POST TITLE": entities.decodeHTML(post.title), // post title
-                            "POST  CREATED": dayjs(post.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the post was created in this format: 2021-09-07 11:41:00 PM
+                            "POST CREATED": dayjs(post.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the post was created in this format: 2021-09-07 11:41:00 PM
                             "POST TEXT": entities.decodeHTML(post.selftext), // post body
                             "POST ID": post.name, // post id
                             "POST URL": post.url, // post uniform resource locator
