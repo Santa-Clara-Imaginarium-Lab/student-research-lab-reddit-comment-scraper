@@ -7,8 +7,8 @@ module.exports.run = async (client) => {
     const json2csv = require("json2csv"); // convert json to csv
     const entities = require("entities"); // decodes html entities (e.g. &amp; becomes &, &quot; becomes ", &lt becomes <, &gt; becomes >)
     const vader = require("vader-sentiment"); // Javascript port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a Node.js app.
-    const getPostLimit = 50; // limit to 50 reddit posts
-    const getCommentsLimit = 30; // limit to get 30 comments per thread  
+    const getPostLimit = 75; // limit to 75 reddit posts
+    const getCommentsLimit = 75; // limit to get 75 comments per thread  
     
     const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
         userAgent: client.config.api.subreddit.user_agent, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
@@ -18,7 +18,7 @@ module.exports.run = async (client) => {
         password: client.config.api.subreddit.password // my reddit password
     });
 
-    redditFetch.config({ requestDelay: 5000}); // delay request to 5 seconds  
+    redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds  
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
@@ -60,7 +60,7 @@ module.exports.run = async (client) => {
 
         for (let i = 0; i < subredditsList.length; i++) { // loop through amount of subreddits defined in module exports file
             for (let j = 0; j < getPostLimit; j++) {  // loop through amount of posts as specified by the static limit
-                const post = await redditFetch.getRandomSubmission(subredditsList[i]); // get random post from subreddit
+                const post = await redditFetch.getRandomSubmission(subredditsList[i]).catch({statusCode: 429}, function() {}); // get random post from subreddit and catch error 429 just in case
 
                 if (!post.id) {
                     console.log(`Searching in subreddit: r/${subredditsList[i]}`);
@@ -71,7 +71,7 @@ module.exports.run = async (client) => {
                 } else {
                     let scrapedComments = [];  
 
-                    console.log(`Found random post ID: ${post.name}`);  // Now, we should grab all of the comments under that post
+                    console.log(`Found random post ID [${post.name}] in /r/${post.subreddit.display_name}`);  // Now, we should grab all of the comments under that post in that subreddit
 
                     scrapedPosts.push(post.name);
 
@@ -80,7 +80,7 @@ module.exports.run = async (client) => {
                         if (scrapedComments.includes(tempIndex)) continue; 
                         scrapedComments.push(tempIndex);
 
-                        if(!post.comments[tempIndex]) break; // We take a maximum of 20 comments per post
+                        if(!post.comments[tempIndex]) break; // We take a maximum of 75 comments per post
                         else if (k === getCommentsLimit) break;
                         else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
 
