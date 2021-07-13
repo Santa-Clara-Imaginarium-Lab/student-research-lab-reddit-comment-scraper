@@ -7,8 +7,8 @@ module.exports.run = async (client) => {
     const json2csv = require("json2csv"); // convert json to csv
     const entities = require("entities"); // decodes html entities (e.g. &amp; becomes &, &quot; becomes ", &lt becomes <, &gt; becomes >)
     const vader = require("vader-sentiment"); // Javascript port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a Node.js app.
-    const getPostLimit = 75; // limit to 75 reddit posts
-    const getCommentsLimit = 75; // limit to get 75 comments per thread  
+    const getPostLimit = 1000; // limit to 1000 reddit posts
+    const getCommentsLimit = 2000; // limit to get 2000 comments per thread  
     
     const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
         userAgent: client.config.api.subreddit.user_agent, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
