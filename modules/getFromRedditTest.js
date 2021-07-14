@@ -27,8 +27,8 @@ module.exports.run = async (client) => {
     function weightedScore ( positiveScore, upvotes, postImpressions) {
         let newScore, upvoteRatio;
 
-        upvoteRatio = upvotes / postImpressions;
-        newScore = positiveScore * 10;
+        upvoteRatio = upvotes / postImpressions; // postImpressions are post.score + post.num_comments
+        newScore = positiveScore * 10; // sentiment.pos * 10 
 
         if (upvoteRatio < 0.20) {
             newScore +=  1.5;
@@ -80,9 +80,9 @@ module.exports.run = async (client) => {
                         if (scrapedComments.includes(tempIndex)) continue; 
                         scrapedComments.push(tempIndex);
 
-                        if(!post.comments[tempIndex]) break; // We take a maximum of 75 comments per post
+                        if(!post.comments[tempIndex]) break; // We take a maximum of 2500 comments per post
                         else if (k === getCommentsLimit) break;
-                        else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
+                        else if (post.comments[tempIndex].author.name === "AutoModerator" || post.comments[tempIndex].author.name.match(/(bot || Bot)*$/)) continue; // It avoids comments from bots
 
                         let comment = post.comments[tempIndex]; 
                         const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(comment.body);
@@ -92,7 +92,17 @@ module.exports.run = async (client) => {
                         
                         /* The pos, neu, and neg scores are ratios for proportions of text that fall in each category (so these should all add up to be 1... or close 
                         to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
-                        
+
+                        function getOverallSentiment(score) {
+                            if (score >= 0.05) {
+                                return "POSITIVE"; 
+                            } else if (score > -0.05 && score < 0.05) {
+                                return "NEUTRAL";
+                            } else {
+                                return "NEGATIVE";
+                            }
+                        };
+   
                         const results = { 
                             "SUBREDDIT NAME": post.subreddit.display_name, // displayed name of subreddit
                             "USER NAME": comment.author.name,   // displayed reddit username of author
@@ -110,11 +120,12 @@ module.exports.run = async (client) => {
                             "NEG COMMENT SCORE": sentimentScores.neg, // compound score <= -0.05
                             "NEU COMMENT SCORE": sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
                             "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05
+                            "WEIGHTED POS COMMENT SCORE": posScoreWeight, // calculate positive weighted comment score out of 10 points maximum
                             "COMP COMMENT SCORE": sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
-                            "WEIGHTED POS COMMENT SCORE": posScoreWeight // calculate positive weighted comment score out of 10 points maximum
+                            "OVERALL SENTIMENT": getOverallSentiment(sentimentScores.compound) // returns positive, negative, or neutral sentiment based on sentiment score compound
                         }; 
 
-                        data.push(results); 
+                        data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
 
                         const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
                         stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization); 
