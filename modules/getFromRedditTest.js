@@ -92,17 +92,7 @@ module.exports.run = async (client) => {
                         
                         /* The pos, neu, and neg scores are ratios for proportions of text that fall in each category (so these should all add up to be 1... or close 
                         to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
-
-                        function getOverallSentiment(score) {
-                            if (score >= 0.05) {
-                                return "POSITIVE"; 
-                            } else if (score > -0.05 && score < 0.05) {
-                                return "NEUTRAL";
-                            } else {
-                                return "NEGATIVE";
-                            }
-                        };
-   
+ 
                         const results = { 
                             "SUBREDDIT NAME": post.subreddit.display_name, // displayed name of subreddit
                             "USER NAME": comment.author.name,   // displayed reddit username of author
@@ -119,10 +109,9 @@ module.exports.run = async (client) => {
                             "COMMENT UPVOTES": comment.score, // amount of upvotes on comment
                             "NEG COMMENT SCORE": sentimentScores.neg, // compound score <= -0.05
                             "NEU COMMENT SCORE": sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
-                            "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05
-                            "WEIGHTED POS COMMENT SCORE": posScoreWeight, // calculate positive weighted comment score out of 10 points maximum
+                            "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05 
                             "COMP COMMENT SCORE": sentimentScores.compound, // The compound score is computed by summing the valence scores of each word in the lexicon, adjusted according to the rules, and then normalized to be between -1 (most extreme negative) and +1 (most extreme positive).
-                            "OVERALL SENTIMENT": getOverallSentiment(sentimentScores.compound) // returns positive, negative, or neutral sentiment based on sentiment score compound
+                            "WEIGHTED POS COMMENT SCORE": posScoreWeight, // calculate positive weighted comment score out of 10 points maximum
                         }; 
 
                         data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
