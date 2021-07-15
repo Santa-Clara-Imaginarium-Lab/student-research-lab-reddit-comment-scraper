@@ -103,6 +103,7 @@ module.exports.run = async (client) => {
                             "POST URL": post.url, // post uniform resource locator
                             "POST UPVOTES": post.score,  // amount of upvotes on post
                             "POST COMMENT AMOUNT": post.num_comments, // amount of comments on the post
+                            "POST UPVOTE RATIO": `${post.upvote_ratio * 100}%`, //ratio of upvotes on this post
                             "COMMENT ID": comment.name, // comment id
                             "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
                             "COMMENT TEXT": entities.decodeHTML(commentText), // comment body
