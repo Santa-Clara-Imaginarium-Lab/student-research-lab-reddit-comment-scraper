@@ -18,7 +18,7 @@ async function scrapeSubreddit() {
     const redditPostID = prompt("Enter your subreddit post ID: ");
     try {
         await redditFetch.getSubmission(redditPostID).expandReplies({ limit: 250, depth: 125 })
-        .then(thread => {  // comment format: [ [author flair text] [comment body] by (comment author name) posted on (comment date) from (comment url)]
+        .then(thread => {   
             thread.comments.forEach((comment) => { //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
                 let data = [];  
                 const results = { 
