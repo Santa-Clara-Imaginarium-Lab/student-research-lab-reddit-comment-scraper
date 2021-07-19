@@ -1,3 +1,4 @@
+const prompt = require("prompt-sync")(); // A sync prompt for node. very simple. no C++ bindings and no bash scripts. 
 const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
 const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
 const dayjs = require("dayjs"); // JavaScript date library for parsing, validating, manipulating, and formatting dates  
@@ -14,7 +15,9 @@ const redditFetch = new snoowrap({ // Pass in a username and password for script
 redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds  
  
 async function scrapeSubreddit() { 
-    await redditFetch.getSubmission("obdzm5").expandReplies()
+    const redditPostID = prompt("Enter your subreddit post ID: ");
+    try {
+        await redditFetch.getSubmission(redditPostID).expandReplies({ limit: 250, depth: 125 })
         .then(thread => {  // comment format: [ [author flair text] [comment body] by (comment author name) posted on (comment date) from (comment url)]
             thread.comments.forEach((comment) => { //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
                 let data = [];  
@@ -35,7 +38,10 @@ async function scrapeSubreddit() {
                 
                 console.log(`... Done. Successfully scraped ${data.length} comments.`); 
             })
-        }).catch({statusCode: 429}, function() {}); // get your respective post from the r/virtualreality subreddit and catch error 429 just in case
+        }).catch({statusCode: 429}, function() {}); // get your respective post from the subreddit and catch error 429 just in case
+    } catch (err) {
+        console.log(err); // catch block in case post ID isn't right :)
+    }
 };
 
 scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds
