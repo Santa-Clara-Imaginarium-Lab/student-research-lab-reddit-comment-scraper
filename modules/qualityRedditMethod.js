@@ -17,7 +17,7 @@ redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds
 async function scrapeSubreddit() { 
     const redditPostID = prompt("Enter your subreddit post ID: ");
     try {
-        await redditFetch.getSubmission(redditPostID).expandReplies({ limit: 250, depth: 125 })
+        await redditFetch.getSubmission(redditPostID).expandReplies()
         .then(thread => {   
             thread.comments.forEach((comment) => { //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
                 let data = [];  
