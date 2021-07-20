@@ -33,7 +33,7 @@ module.exports.run = async (client) => {
                         "COMMENT UPVOTES": comment.score // amount of upvotes on comment 
                     }; 
   
-                    function getCommentChildren (arr, i) {
+                    function getCommentChildren (arr, i) { // scans for leaves of each comment that is ran through the for loop above
                         // base case, stop recurring 
                         if (i === arr.length) {
                             return;
