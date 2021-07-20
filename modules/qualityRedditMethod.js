@@ -32,16 +32,16 @@ module.exports.run = async (client) => {
                         "COMMENT TEXT": comment.body, // comment body
                         "COMMENT UPVOTES": comment.score // amount of upvotes on comment 
                     }; 
- 
+  
                     function getCommentChildren (arr, i) {
                         // base case, stop recurring 
                         if (i === arr.length) {
                             return;
                         }  
                         
-                        if (comment.post_num === 0) {
+                        if (comment.post_num === 0) { // check to see if replies is empty, if it is it's the last leaf on the branch and continue down the line
                             continue;
-                        } else { 
+                        } else {  // otherwise, keep going until (i === arr.length) where there cannot be any more iterations
                             getCommentChildren(comment.post_num, comment.post_num + 1);
                         }
 
