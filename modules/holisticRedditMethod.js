@@ -80,7 +80,7 @@ module.exports.run = async (client) => {
                         if (scrapedComments.includes(tempIndex)) continue; 
                         scrapedComments.push(tempIndex);
 
-                        if(!post.cromments[tempIndex]) break; // We take a maximum of 2500 comments per post
+                        if(!post.comments[tempIndex]) break; // We take a maximum of 2500 comments per post
                         else if (k === getCommentsLimit) break;
                         else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
 
