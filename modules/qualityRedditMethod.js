@@ -14,15 +14,14 @@ module.exports.run = async (client) => {
     });
 
     redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds  
-    
-    async function scrapeSubreddit() { 
+ 
+    async function scrapeSubreddit() {   
+        let data = [];     
         const redditPostID = prompt("Enter your subreddit post ID: ");
         try {
-            await redditFetch.getSubmission(redditPostID).expandReplies()
+            redditFetch.getSubmission(redditPostID).expandReplies()
             .then(thread => {   
                 thread.comments.forEach((comment) => { //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
-                    let data = [];  
-
                     const results = { 
                         "SUBREDDIT NAME": comment.subreddit.display_name, // displayed name of subreddit
                         "USER NAME": comment.author.name,   // displayed reddit username of author 
@@ -32,35 +31,28 @@ module.exports.run = async (client) => {
                         "COMMENT TEXT": comment.body, // comment body
                         "COMMENT UPVOTES": comment.score // amount of upvotes on comment 
                     }; 
-  
-                    function getCommentChildren (arr, i) { // scans for leaves of each comment that is ran through the for loop above
-                        // base case, stop recurring 
-                        if (i === arr.length) {
-                            return;
-                        }  
-                        
-                        if (comment.post_num === 0) { // check to see if replies is empty, if it is it's the last leaf on the branch and continue down the line
+    
+                    for (let k = 0; k < comment.post_num; k++) {
+                        if (comment.pos_num === 0) {
                             continue;
-                        } else {  // otherwise, keep going until (i === arr.length) where there cannot be any more iterations
-                            getCommentChildren(comment.post_num, comment.post_num + 1);
+                        } else {
+                            scrapeSubreddit();
                         }
-
-                        data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
-                    };
-
-                    // call ourself with the next index
-                    getCommentChildren(comment.post_num, comment.post_num + 1);
-
-                    const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+    
+                        if (comment.author.name === "AutoModerator" || comment.author.name === "[deleted]") continue;  
+                    }  
+    
+                    data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
+    
+                    const stream = fs.createWriteStream(`qualityRedditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
                     stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization);  
                     
-                    console.log(`... Done. Successfully scraped ${data.length} comments.`); 
-                })
-            }).catch({statusCode: 429}, function() {}); // get your respective post from the subreddit and catch error 429 just in case
+                    console.log(`... Done. Successfully scraped ${data.length} comments.`);
+                });
+            }).catch({statusCode: 429}, function() {}); // get your respective post from the subreddit and catch error 429 just in case  
         } catch (err) {
-            console.log(err); // catch block in case post ID isn't right :)
+            if (err) return;
         }
-    };
-
-    scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds
-};
+    }; 
+    scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds 
+}; 
