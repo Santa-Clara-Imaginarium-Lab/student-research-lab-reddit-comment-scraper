@@ -80,7 +80,7 @@ module.exports.run = async (client) => {
                         if (scrapedComments.includes(tempIndex)) continue; 
                         scrapedComments.push(tempIndex);
 
-                        if(!post.comments[tempIndex]) break; // We take a maximum of 2500 comments per post
+                        if(!post.cromments[tempIndex]) break; // We take a maximum of 2500 comments per post
                         else if (k === getCommentsLimit) break;
                         else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
 
@@ -116,7 +116,7 @@ module.exports.run = async (client) => {
 
                         data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
 
-                        const stream = fs.createWriteStream(`redditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+                        const stream = fs.createWriteStream(`holisticRedditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
                         stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization); 
                     }; 
                 };   

@@ -1,5 +1,4 @@
-module.exports.run = async (client) => {
-    const prompt = require("prompt-sync")(); // A sync prompt for node. very simple. no C++ bindings and no bash scripts. 
+module.exports.run = async (client) => { 
     const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
     const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
     const dayjs = require("dayjs"); // JavaScript date library for parsing, validating, manipulating, and formatting dates  
@@ -13,46 +12,49 @@ module.exports.run = async (client) => {
         password: client.config.api.subreddit.password // my reddit password
     });
 
-    redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds  
+    redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds   
+
+    /*
+        the key thing here is pushComments(comments, arr, stream), which loops through every comment of comments and:
+
+        - creates results and pushes it to arr
+        - converts results to csv format and writes it to stream
+        - and most importantly, calls itself for comment.replies
+    */
+
+    async function pushComments (comments, arr, stream) {
+        for (let comment of comments) {
+            if (comment.author.name === "AutoModerator" || comment.author.name === "[deleted]") continue; //authors who are "AutoModerator" bots or authors who deleted comments will be ignored
+            
+            const results = { 
+                "SUBREDDIT NAME": comment.subreddit.display_name, // displayed name of subreddit
+                "USER NAME": comment.author.name,   // displayed reddit username of author 
+                "COMMENT ID": comment.name, // comment id
+                "COMMENT PERMALINK": `https://reddit.com${comment.permalink}`,
+                "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
+                "COMMENT TEXT": comment.body, // comment body
+                "COMMENT UPVOTES": comment.score // amount of upvotes on comment 
+            };
+    
+            arr.push(results); //push to data array to count amount of comments scraped
+            await stream.write(json2csv.parse(results));
+    
+            if (comment.replies.length > 0) { // amount of replies for comment exceeds 0, recurse with pushComments(comment.replies, arr, stream); 
+                await pushComments(comment.replies, arr, stream);
+            }
+        }
+    }
  
     async function scrapeSubreddit() {   
-        let data = [];     
-        const redditPostID = prompt("Enter your subreddit post ID: ");
-        try {
-            redditFetch.getSubmission(redditPostID).expandReplies()
-            .then(thread => {   
-                thread.comments.forEach((comment) => { //attempts to loop through entire comment thread to no avail xd - will have to adjust to scan for all comments in respective post threads
-                    const results = { 
-                        "SUBREDDIT NAME": comment.subreddit.display_name, // displayed name of subreddit
-                        "USER NAME": comment.author.name,   // displayed reddit username of author 
-                        "COMMENT ID": comment.name, // comment id
-                        "COMMENT PERMALINK": `https://reddit.com/${comment.permalink}`,
-                        "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
-                        "COMMENT TEXT": comment.body, // comment body
-                        "COMMENT UPVOTES": comment.score // amount of upvotes on comment 
-                    }; 
-    
-                    for (let k = 0; k < comment.post_num; k++) {
-                        if (comment.pos_num === 0) {
-                            continue;
-                        } else {
-                            scrapeSubreddit();
-                        }
-    
-                        if (comment.author.name === "AutoModerator" || comment.author.name === "[deleted]") continue;  
-                    }  
-    
-                    data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
-    
-                    const stream = fs.createWriteStream(`qualityRedditComments.csv`, {"flags": "a", "encoding": "utf-8"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
-                    stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization);  
-                    
-                    console.log(`... Done. Successfully scraped ${data.length} comments.`);
-                });
-            }).catch({statusCode: 429}, function() {}); // get your respective post from the subreddit and catch error 429 just in case  
-        } catch (err) {
-            if (err) return;
-        }
+        let data = [];      
+
+        const thread = await redditFetch.getSubmission("onwdni").expandReplies().catch({statusCode: 429}, function() {}); // get random post from subreddit and catch error 429 just in case
+
+        const stream = fs.createWriteStream(`qualityRedditComments.csv`, { "flags": "a", "encoding": "utf-8"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+
+        await pushComments(thread.comments, data, stream)
+        console.log(`... Done. Successfully scraped ${data.length} comments.`);  //gets amount of top-level comments and their nested chidlren elements as well
     }; 
-    scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds 
+
+    await scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds 
 }; 
