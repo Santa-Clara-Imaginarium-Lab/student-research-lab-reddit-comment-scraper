@@ -82,7 +82,7 @@ module.exports.run = async (client) => {
 
                         if(!post.comments[tempIndex]) break; // We take a maximum of 2500 comments per post
                         else if (k === getCommentsLimit) break;
-                        else if (post.comments[tempIndex].author.name === "AutoModerator") continue; // It avoids comments from bots
+                        else if (post.comments[tempIndex].author.name === "AutoModerator" || post.comments[tempIndex].author.name === "[deleted]") continue; // It avoids comments from bots
 
                         let comment = post.comments[tempIndex]; 
                         const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(comment.body);
