@@ -52,7 +52,7 @@ module.exports.run = async (client) => {
 
         const stream = fs.createWriteStream(`qualityRedditComments.csv`, { "flags": "a", "encoding": "ascii"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
 
-        await pushComments(thread.comments, data, stream)
+        await pushComments(thread.comments, data, stream);
         console.log(`... Done. Successfully scraped ${data.length} comments.`);  //gets amount of top-level comments and their nested chidlren elements as well
     }; 
 

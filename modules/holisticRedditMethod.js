@@ -127,5 +127,5 @@ module.exports.run = async (client) => {
         
         console.log(`... Done. Successfully scraped ${data.length} comments.`);
     };
-    scrapeSubreddit(); //scrapes across all posts and comments throughout the subreddits listed in the module export without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds
+    await scrapeSubreddit(); //scrapes across all posts and comments throughout the subreddits listed in the module export without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds
 };
