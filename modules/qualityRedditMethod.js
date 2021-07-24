@@ -50,7 +50,7 @@ module.exports.run = async (client) => {
 
         const thread = await redditFetch.getSubmission("onwdni").expandReplies().catch({statusCode: 429}, function() {}); // get random post from subreddit and catch error 429 just in case
 
-        const stream = fs.createWriteStream(`qualityRedditComments.csv`, { "flags": "a", "encoding": "ascii"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+        const stream = fs.createWriteStream(`./redditComments/qualityRedditComments.csv`, { "flags": "a", "encoding": "ascii"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
 
         await pushComments(thread.comments, data, stream);
         console.log(`... Done. Successfully scraped ${data.length} comments.`);  //gets amount of top-level comments and their nested chidlren elements as well

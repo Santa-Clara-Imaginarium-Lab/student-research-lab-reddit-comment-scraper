@@ -116,7 +116,7 @@ module.exports.run = async (client) => {
 
                         data.push(results); //push object to array but change how I write code to push "results" object to the "data" array so that the respective Reddit comments on posts won't constantly duplicate the CSV headers in the "redditComments.csv."
 
-                        const stream = fs.createWriteStream(`holisticRedditComments.csv`, {"flags": "a", "encoding": "ascii"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+                        const stream = fs.createWriteStream(`./redditComments/holisticRedditComments.csv`, {"flags": "a", "encoding": "ascii"});  // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
                         stream.write(json2csv.parse(results)); // writes to text file ; made this a csv file for better file readability and organization); 
                     }; 
                 };   
