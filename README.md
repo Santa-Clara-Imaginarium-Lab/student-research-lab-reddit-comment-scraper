@@ -110,7 +110,7 @@ npm init
    - Recursively scrapes all comments and their children replies from a specific post ID
    - Say we wanted to scrape all the comments from this thread, we would do the following:
      - 1. Copy the code linked above and name it `qualityMethodReddit.js` and save it in your root coding folder 
-     - 2. Go to the post comment url and get the "ID" => https://www.reddit.com/r/virtualreality/comments/obdzm5 => in this case, `obdzm5` would be the ID
+     - 2. Go to the post comment url => https://www.reddit.com/r/virtualreality/comments/obdzm5 => and get `obdzm5`, which would be the post ID
      - 3. Go to the command line and type then hit enter: `node qualityMethodReddit.js`
      - 4. It will ask you to input a post id so enter in `obdzm5`
      - 5. Check the `redditComments` folder for your outputted `qualityRedditComments.csv` file!
