@@ -106,7 +106,7 @@ npm init
   <img src="https://user-images.githubusercontent.com/42426861/127064502-4af7b6b1-0055-4cd6-b718-9f9be7f9a9df.png">
 </p>
 
-2. [Quality Method](https://hastebin.com/afecodurid.js): 
+2. [Quality Method](https://hastebin.com/ikizakuxur.js): 
    - Recursively scrapes all comments and their children replies from a specific post ID
    - Say we wanted to scrape all the comments from this thread, we would do the following:
      - 1. Copy the code linked above and name it `qualityMethodReddit.js` and save it in your root coding folder 
