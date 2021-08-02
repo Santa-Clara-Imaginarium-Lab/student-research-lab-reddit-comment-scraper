@@ -60,15 +60,15 @@ npm init
 
 3. Now do `npm install [insert package name]` for each of the following dependencies we will need for the sake of this project: 
 
-   - `entities`
-   - `json2csv`
-   - `path`
-   - `snoowrap`
-   - `vader-sentiment`
-   - `fs`
-   - `dayjs`
-   - `prompt-sync`
-   - `valid-url`
+   - `entities`: Decodes HTML entities (e.g. &amp; becomes &, &quot; becomes ", &lt becomes <, &gt; becomes >).
+   - `json2csv`: Convert **JSON** to **CSV**.
+   - `path`: **Node.js** "path" module published to the **NPM** registry.
+   - `snoowrap`: Fully-featured **JavaScript** wrapper that provides a simple interface to access every **Reddit API** endpoint.
+   - `vader-sentiment`: **Javascript** port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a **Node.js** app.
+   - `fs`: Provides a lot of very useful functionality to access and interact with the file system.
+   - `dayjs`: **JavaScript** date library for parsing, validating, manipulating, and formatting date.
+   - `prompt-sync`: A sync prompt for **Node.js**. very simple. no C++ bindings and no bash scripts. 
+   - `pm2`: Production process manager for **Node.js** applications that allows you to keep applications alive for however long you want without downtime and to facilitate common system admin tasks.
 
 # Obtain Reddit Credentials
 
@@ -104,7 +104,7 @@ npm init
    - Scrapes across various subreddits with set post and comment amount limits to avoid overloading requests to the **Reddit** server.
    - To properly utilize this method, we would do the following:
      - 1. Copy the code linked above and name it `holisticMethodReddit.js` and save it in your current coding folder - `reddit-scraper-bot`
-     - 2. Go to the command line and type then hit enter: `node holisticMethodReddit.js`
+     - 2. Go to the command line and type then hit enter: `pm2 start holisticMethodReddit.js`
      - 3. Wait because this method takes a long amount of time but over a couple hours it will output large amounts of metadata into the `holisticRedditComments.csv` in your coding folder.
      - 4. Check the `redditComments` folder for your outputted `holisticRedditComments.csv` file!
 
@@ -121,7 +121,7 @@ npm init
    - Say we wanted to scrape all the comments from this thread, we would do the following:
      - 1. Copy the code linked above and name it `qualityMethodReddit.js` and save it in your current coding folder - `reddit-scraper-bot`
      - 2. Go to the post comment url => https://www.reddit.com/r/virtualreality/comments/obdzm5 => and get `obdzm5`, which would be the post ID.
-     - 3. Go to the command line and type then hit enter: `node qualityMethodReddit.js`
+     - 3. Go to the command line and type then hit enter: `pm2 start qualityMethodReddit.js`
      - 4. It will ask you to input a post id, so enter in `obdzm5`
      - 5. Check the `redditComments` folder for your outputted `qualityRedditComments.csv` file!
 
@@ -132,3 +132,15 @@ npm init
 <p align="center">
   <img src="https://user-images.githubusercontent.com/42426861/127065044-3485a336-6fdb-4014-85f1-67e929a10d37.png">
 </p>
+
+# Common Issues (But Not Limited To These) To Be Addressed
+
+- Updating outdated **Node.js** and **NPM** versions.
+
+- Fixing the **Node.js** environment path variables for Windows/Mac per this [website's instructions](https://newbedev.com/fixing-npm-path-in-windows-8-and-10).
+
+- Identifying and installing packages for dependencies not found.
+
+- **Reddit** status codes 429 and/or 503 when using the **Reddit API** via my scripts.
+
+- Having **Reddit API** credentials that don’t match what you have on the developer portal and/or inputting the inaccurate information.
