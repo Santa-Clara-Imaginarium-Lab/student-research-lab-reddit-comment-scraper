@@ -90,7 +90,7 @@ npm init
 
 # Deploy Scripts
 
-1. [Holistic Method](https://hastebin.com/ozomolugix.js): 
+1. [Holistic Method](https://hastebin.com/simokojaje.js): 
    - Scrapes across various subreddits with set post and comment amount limits to avoid overloading requests to the Reddit server
    - To properly utilize this method, we would do the following:
      - 1. Copy the code linked above and name it `holisticMethodReddit.js` and save it in your root coding folder  
