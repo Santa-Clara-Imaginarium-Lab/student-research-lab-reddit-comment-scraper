@@ -45,7 +45,7 @@ v12.18.4
 
 - The following steps show how you can use **NPM** to download a package, save it into the project dependencies, and then require it in a **Node** application.
 
-1. First create a directory for your new application and navigate into it:
+1. First create a directory named `reddit-scraper-bot` for your new application and navigate into it:
 
 ```
 mkdir reddit-scraper-bot
@@ -64,7 +64,7 @@ npm init
    - `json2csv`: Convert **JSON** to **CSV**.
    - `path`: **Node.js** "path" module published to the **NPM** registry.
    - `snoowrap`: Fully-featured **JavaScript** wrapper that provides a simple interface to access every **Reddit API** endpoint.
-   - `vader-sentiment`: **Javascript** port of the VADER sentiment analysis tool. Sentiment from text can be determined in-browser or in a **Node.js** app.
+   - `vader-sentiment`: **Javascript** port of the VADER sentiment analysis tool. Sentiment from text can be determined in a **Node.js** app.
    - `fs`: Provides a lot of very useful functionality to access and interact with the file system.
    - `dayjs`: **JavaScript** date library for parsing, validating, manipulating, and formatting date.
    - `prompt-sync`: A sync prompt for **Node.js**. very simple. no C++ bindings and no bash scripts. 
