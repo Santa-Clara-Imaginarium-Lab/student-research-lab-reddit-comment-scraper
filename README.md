@@ -6,9 +6,9 @@
 
 - Using mixed-method approach in Dr. David Jeong's lab to study social media interactions as well as ethical implications of emerging media technology.
 
-- Utilizing web-scraping techniques to collect and archive large quantities of **Reddit**, **Instagram**, **Tiktok** and **Twitter** user-generated content for social media analysis.
+- Utilizing web-scraping techniques to collect digital platform content from **Reddit**, **Instagram**, **Tiktok** and **Twitter** for sentiment analysis.
 
-- Maintaining and developing Discord server and professional webpage for research team.
+- Maintaining Discord server on behalf of the research team.
 
 # Installing and setting up the Node.js environment
 
