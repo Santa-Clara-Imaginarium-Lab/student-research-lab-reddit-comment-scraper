@@ -16,6 +16,7 @@ client.registry
   .registerGroups([   
     ["admins", "Admins"],
     ["fun", "Fun"],
+    ["league", "League"],
     ["practicality", "Practicality"],
   ])
   .registerDefaultGroups()
