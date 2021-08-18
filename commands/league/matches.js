@@ -60,8 +60,10 @@ module.exports = class matchesCommand extends Command {
                     message.channel.send(matchData);
                 }
             })
-            .catch(err => {
-                console.log(err);
-            })
+            .catch((err) => {
+                if (err.response.status === 403) {
+                    return;
+                }
+            }) //catch error code 403
     }
 }

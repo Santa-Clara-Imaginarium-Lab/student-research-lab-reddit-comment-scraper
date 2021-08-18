@@ -60,6 +60,10 @@ module.exports = class masteryCommand extends Command {
                 message.channel.send(exampleEmbed); 
             }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            if (err.response.status === 403) {
+                return;
+            }
+        }) //catch error code 403
     }
 };       

@@ -9,6 +9,7 @@ module.exports = async (client, message) => {
     const messageReception = new MessageEmbed().setColor(client.config.school_color)
     .setAuthor(message.author.tag, message.author.displayAvatarURL()); 
   
+    try { 
       //Check if message is in a direct message and mentions bot
       if (message.channel.type === "dm" && message.mentions.has(client.user)) {   
         const userTicketContent = message.content.split(" ").slice(1).join(" "); 
@@ -169,4 +170,7 @@ module.exports = async (client, message) => {
           break;
         }
       }
-};
+    } catch (err) {
+      if (err === "DiscordAPIError: Cannot send messages to this user") return;
+    } 
+}; 

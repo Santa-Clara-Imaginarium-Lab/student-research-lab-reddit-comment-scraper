@@ -24,7 +24,7 @@ module.exports.run = async (client) => {
 
     async function pushComments (comments, arr, stream) {
         for (let comment of comments) {
-            if (comment.author.name === "AutoModerator" || comment.author.name === "[deleted]") continue; //authors who are "AutoModerator" bots or authors who deleted comments will be ignored
+            if (comment.author.name === "AutoModerator" || comment.author.name === "[removed]" || comment.author.name === "[deleted]") continue; //authors who are "AutoModerator" bots, author comments that have been removed, or authors who deleted comments will be ignored
             
             const results = { 
                 "SUBREDDIT NAME": comment.subreddit.display_name, // displayed name of subreddit
