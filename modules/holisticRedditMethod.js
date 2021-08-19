@@ -84,18 +84,17 @@ module.exports.run = async (client) => {
                         else if (k === getCommentsLimit) break;
                         else if (post.comments[tempIndex].author.name === "AutoModerator" || post.comments[tempIndex].author.name === "[removed]" || post.comments[tempIndex].author.name === "[deleted]") continue; //authors who are "AutoModerator" bots, author comments that have been removed, or authors who deleted comments will be ignored
 
-                        let comment = post.comments[tempIndex]; 
-                        const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(comment.body);
-                        let commentText = comment.body.replace(/[\n\r]+/g, " ");
+                        const sentimentScores = vader.SentimentIntensityAnalyzer.polarity_scores(post.comments[tempIndex].body);
+                        let commentText = post.comments[tempIndex].body.replace(/[\n\r]+/g, " ");
 
-                        posScoreWeight = weightedScore (sentimentScores.pos, comment.score, post.score + post.num_comments);
+                        posScoreWeight = weightedScore (sentimentScores.pos, post.comments[tempIndex].score, post.score + post.num_comments);
                         
                         /* The pos, neu, and neg scores are ratios for proportions of text that fall in each category (so these should all add up to be 1... or close 
                         to it with float operation). These are the most useful metrics if you want multidimensional measures of sentiment for a given sentence. */
  
-                        const results = { 
+                        const results = {  
                             "SUBREDDIT NAME": post.subreddit.display_name, // displayed name of subreddit
-                            "USER NAME": comment.author.name,   // displayed reddit username of author
+                            "USER NAME": post.comments[tempIndex].author.name,   // displayed reddit username of author
                             "POST TITLE": entities.decodeHTML(post.title), // post title
                             "POST CREATED": dayjs(post.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the post was created in this format: 2021-09-07 11:41:00 PM
                             "POST TEXT": entities.decodeHTML(post.selftext), // post body
@@ -103,10 +102,10 @@ module.exports.run = async (client) => {
                             "POST URL": post.url, // post uniform resource locator
                             "POST UPVOTES": post.score,  // amount of upvotes on post
                             "POST COMMENT AMOUNT": post.num_comments, // amount of comments on the post
-                            "COMMENT ID": comment.name, // comment id
-                            "COMMENT CREATED": dayjs(comment.created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
+                            "COMMENT ID": post.comments[tempIndex].name, // comment id
+                            "COMMENT CREATED": dayjs(post.comments[tempIndex].created_utc * 1000).format("YYYY-DD-MM h:mm:ss A"), // the date the comment was created in this format: 2021-09-07 11:41:00 PM
                             "COMMENT TEXT": entities.decodeHTML(commentText), // comment body
-                            "COMMENT UPVOTES": comment.score, // amount of upvotes on comment
+                            "COMMENT UPVOTES": post.comments[tempIndex].score, // amount of upvotes on comment
                             "NEG COMMENT SCORE": sentimentScores.neg, // compound score <= -0.05
                             "NEU COMMENT SCORE": sentimentScores.neu, // ( compound score > -0.05 ) and ( compound score < 0.05 )
                             "POS COMMENT SCORE": sentimentScores.pos, // compound score >= 0.05 
