@@ -1,0 +1,17 @@
+"SUBREDDIT NAME","USER NAME","COMMENT ID","COMMENT PERMALINK","COMMENT CREATED","COMMENT TEXT","COMMENT UPVOTES"
+"redditdev","Trakeen","t1_h5vw58o","https://reddit.com/r/redditdev/comments/onwdni/how_to_iterate_past_1st_children_elements_in/h5vw58o/","2021-20-07 8:34:48 AM","IMO the easy way to handle this is to use recursion (a function that calls itself) which is generally how tree traversal is approached
+
+This article has some jscript specific code. I could post what I've done but it's in powershell so not sure if that would be useful or not. It's only a few lines of code
+
+&#x200B;
+
+[https://qvault.io/javascript/how-to-recursively-traverse-objects/](https://qvault.io/javascript/how-to-recursively-traverse-objects/)
+
+&#x200B;
+
+edit: check to see if replies is empty if it is it's the last leaf on the branch and do whatever you need to with that message, otherwise continue down the tree",2
+"redditdev","jvu404","t1_h5wpe4l","https://reddit.com/r/redditdev/comments/onwdni/how_to_iterate_past_1st_children_elements_in/h5wpe4l/","2021-20-07 11:58:06 AM","[https://hastebin.com/dojerojico.js](https://hastebin.com/dojerojico.js)
+
+As of now, I have this. Could you check? I haven't dealt with recursion much so next for clearing up my qualms !
+
+EDIT: Nvm i think i got it ! tysm for your recursive solution!",1

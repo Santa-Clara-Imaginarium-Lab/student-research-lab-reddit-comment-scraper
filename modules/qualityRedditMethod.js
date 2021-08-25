@@ -5,7 +5,7 @@ module.exports.run = async (client) => {
     const json2csv = require("json2csv"); // convert json to csv 
 
     const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
-        userAgent: client.config.api.subreddit.user_agent, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
+        userAgent: "'Student Research Lab Robot by /u/jvu404' 'https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot'", // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
         clientId: client.config.api.subreddit.client_id, // client id needed to access Reddit’s API as a script application
         clientSecret: client.config.api.subreddit.client_secret, // client secret needed to access Reddit’s API as a script application
         username: client.config.api.subreddit.username, // my reddit username 
@@ -48,12 +48,12 @@ module.exports.run = async (client) => {
     async function scrapeSubreddit() {   
         let data = [];      
 
-        const thread = await redditFetch.getSubmission("onwdni").expandReplies().catch({statusCode: 429}, function() {}); // get random post from subreddit and catch error 429 just in case
-
-        const stream = fs.createWriteStream(`./redditComments/qualityRedditComments.csv`, { "flags": "a", "encoding": "ascii"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
+        const postID = "onwdni";
+        const thread = await redditFetch.getSubmission(postID).expandReplies().catch({statusCode: 429}, function() {}); // get random post from subreddit and catch error 429 just in case
+        const stream = fs.createWriteStream(`./redditComments/qualityRedditComments_${postID}.csv`, { "flags": "a", "encoding": "ascii"}); // "a" flag opens the file for writing, positioning the stream at the end of the file. The file is created if it does not exist
 
         await pushComments(thread.comments, data, stream);
-        console.log(`... Done. Successfully scraped ${data.length} comments.`);  //gets amount of top-level comments and their nested chidlren elements as well
+        console.log(`... Done. Successfulldy scraped ${data.length} comments.`);  //gets amount of top-level comments and their nested chidlren elements as well
     }; 
 
     await scrapeSubreddit(); //scrapes across all posts and comments without triggering Reddit API limits - could potentially accommodate to increase amount without compromising thresholds 
