@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "aki-api": "^5.2.1",
+    "axios": "^0.21.2",
     "cheerio": "^1.0.0-rc.10",
     "dayjs": "^1.10.6",
     "discord.js": "^12.5.3",
@@ -14,6 +15,7 @@
     "figlet": "^1.5.2",
     "json2csv": "^5.0.6",
     "node-fetch": "^2.6.1",
+    "pac-resolver": "^5.0.0",
     "path": "^0.12.7",
     "pm2": "^5.1.1",
     "quick.db": "^7.1.3",
