@@ -14,7 +14,7 @@
     "entities": "^2.2.0",
     "figlet": "^1.5.2",
     "json2csv": "^5.0.6",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "nth-check": "^2.0.1",
     "pac-resolver": "^5.0.0",
     "path": "^0.12.7",
