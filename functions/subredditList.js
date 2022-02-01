@@ -1,9 +1,9 @@
 // List of subreddits to scrape
 
 exports.array = [
-    "AmITheAsshole", 
-    "CollegeBasketball",
+    "nfl", 
+    "baseball",
     "JustNoMIL",
     "NBA", 
-    "nbadiscussion"
+    "science"
 ];
