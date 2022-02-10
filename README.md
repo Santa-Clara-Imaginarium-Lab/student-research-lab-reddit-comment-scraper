@@ -31,7 +31,7 @@ v12.18.4
 
 ```
 > npm -v 
-v6.14.6
+v8.4.0
 ```
 
 # Using NPM
@@ -98,7 +98,7 @@ npm init
 
 # Deploy Scripts
 
-1. [Holistic Method](https://hastebin.com/uyawuhidok.js):
+1. [Holistic Method](https://www.toptal.com/developers/hastebin/cimaboteva.js):
    - Scrapes across various subreddits with set post and comment amount limits to avoid overloading requests to the **Reddit** server.
    - To properly utilize this method, we would do the following:
      - 1. Copy the code linked above and name it `holisticMethodReddit.js` and save it in your current coding folder - `reddit-scraper-bot`
@@ -114,7 +114,7 @@ npm init
   <img src="https://user-images.githubusercontent.com/42426861/127064502-4af7b6b1-0055-4cd6-b718-9f9be7f9a9df.png">
 </p>
 
-2. [Quality Method](https://hastebin.com/lusitiwoza.js):
+2. [Quality Method](https://www.toptal.com/developers/hastebin/ecahorozob.js):
    - Recursively scrapes all comments and their children replies from a specific post ID
    - Say we wanted to scrape all the comments from this thread, we would do the following:
      - 1. Copy the code linked above and name it `qualityMethodReddit.js` and save it in your current coding folder - `reddit-scraper-bot`
