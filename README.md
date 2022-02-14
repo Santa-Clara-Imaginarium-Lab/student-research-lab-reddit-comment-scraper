@@ -24,7 +24,7 @@
 
 ```
 > node -v
-v12.18.4
+v14.16.1
 ```
 
 - The **Node.js** package manager **NPM** should also have been installed, and can be tested in the same way:
