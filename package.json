@@ -28,7 +28,7 @@
     "to-title-case": "^1.0.0",
     "vader-sentiment": "^1.1.3",
     "valid-url": "^1.0.9",
-    "vm2": "^3.9.5"
+    "vm2": "^3.9.6"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
