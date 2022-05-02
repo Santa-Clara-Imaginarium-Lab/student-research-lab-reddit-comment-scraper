@@ -1,34 +1,23 @@
 {
-  "name": "student-research-lab-robot",
+  "name": "student-research-lab-reddit-comment-scraper",
   "description": "",
   "version": "1.0.0",
   "main": "index.js",
-  "dependencies": {
-    "aki-api": "^5.2.1",
-    "axios": "^0.21.2",
-    "cheerio": "^1.0.0-rc.10",
-    "dayjs": "^1.10.6",
-    "discord.js": "^12.5.3",
-    "discord.js-commando": "^0.12.3",
-    "discord.js-pagination": "^1.0.3",
-    "entities": "^2.2.0",
-    "figlet": "^1.5.2",
-    "follow-redirects": "^1.14.8",
-    "json-schema": "^0.4.0",
+  "dependencies": { 
+    "dayjs": "^1.10.6", 
+    "entities": "^2.2.0", 
+    "follow-redirects": "^1.14.7", 
     "json2csv": "^5.0.6",
     "node-fetch": "^3.1.1",
     "nth-check": "^2.0.1",
     "pac-resolver": "^5.0.0",
     "path": "^0.12.7",
-    "pm2": "^5.1.1",
-    "quick.db": "^7.1.3",
-    "quickchart-js": "^1.3.1",
-    "simple-get": "^4.0.1",
-    "snoowrap": "^1.23.0",
-    "to-title-case": "^1.0.0",
+    "pm2": "^5.1.1", 
+    "snoowrap": "^1.23.0", 
     "vader-sentiment": "^1.1.3",
     "valid-url": "^1.0.9",
-    "vm2": "^3.9.6"
+    "vm2": "^3.9.5",
+    "prompt-sync": "4.2.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -38,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Santa-Clara-Media-Lab/student-research-reddit-comment-scraper.git"
+    "url": "git+https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot.git"
   },
   "author": "Jason Vu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Santa-Clara-Media-Lab/student-research-reddit-comment-scraper/issues"
+    "url": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot/issues"
   },
-  "homepage": "https://github.com/Santa-Clara-Media-Lab/student-research-reddit-comment-scraper#readme"
+  "homepage": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot#readme"
 }
