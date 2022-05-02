@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot.git"
+    "url": "git+https://github.com/Santa-Clara-Media-Lab/student-research-lab-reddit-comment-scraper.git"
   },
   "author": "Jason Vu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot/issues"
+    "url": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-reddit-comment-scraper/issues"
   },
-  "homepage": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot#readme"
+  "homepage": "https://github.com/Santa-Clara-Media-Lab/student-research-lab-reddit-comment-scraper#readme"
 }
