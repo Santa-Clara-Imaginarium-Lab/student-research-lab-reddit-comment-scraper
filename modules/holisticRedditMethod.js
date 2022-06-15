@@ -1,3 +1,4 @@
+require("dotenv").config();
 const subreddits = require("../functions/subredditList.js"); //references list of wanted subreddits here
 const snoowrap = require("snoowrap"); // fully-featured JavaScript wrapper that provides a simple interface to access every reddit API endpoint
 const fs = require("fs"); // provides a lot of very useful functionality to access and interact with the file system
@@ -10,11 +11,11 @@ const getPostLimit = 2500; // limit to 2500 reddit posts
 const getCommentsLimit = 1250; // limit to get 1250 comments per thread  
 
 const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
-    userAgent: client.config.api.subreddit.user_agent, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
-    clientId: client.config.api.subreddit.client_id, // client id needed to access Reddit’s API as a script application
-    clientSecret: client.config.api.subreddit.client_secret, // client secret needed to access Reddit’s API as a script application
-    username: client.config.api.subreddit.username, // my reddit username 
-    password: client.config.api.subreddit.password // my reddit password
+    userAgent: process.env.USER_AGENT, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
+    clientId: process.env.CLIENT_ID, // client id needed to access Reddit’s API as a script application
+    clientSecret: process.env.CLIENT_SECRET, // client secret needed to access Reddit’s API as a script application
+    username: process.env.USER_NAME, // my reddit username 
+    password: process.env.PASS_WORD // my reddit password
 });
 
 redditFetch.config({ requestDelay: 10000}); // delay request to 10 seconds  

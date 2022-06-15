@@ -6,4 +6,4 @@ exports.array = [
     "JustNoMIL",
     "NBA", 
     "science"
-];
+]; 
