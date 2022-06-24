@@ -24,14 +24,14 @@
 
 ```
 > node -v
-v14.16.1
+v16.15.1
 ```
 
 - The **Node.js** package manager **NPM** should also have been installed, and can be tested in the same way:
 
 ```
 > npm -v 
-v8.4.0
+v8.13.1
 ```
 
 # Using NPM
@@ -82,18 +82,14 @@ npm init
   <img src="https://user-images.githubusercontent.com/42426861/127066287-6f9d89c1-1e47-447e-b181-5b7cc1d05eb4.png">
 </p>
 
-3. To properly secure your new Reddit credentials, make a file called `config.json` and copy the format structure below while filing in the variables for the **Reddit API** instance:
+3. To properly secure your new Reddit credentials, make a file called `.env` and copy the format structure below while filing in the variables for the **Reddit API** instance:
 
 ```
-{
-   "subreddit": {
-        "client_secret": "[insert-reddit-client-secret]",
-        "client_id": "[insert-client-id]",
-        "user_agent": "'Student Research Lab Robot by /u/anon-username' 'https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot'",
-        "username": "[your-reddit-username]",
-        "password": "[your-reddit-password]"
-   } 
-} 
+CLIENT_ID=[insert-client-id]
+CLIENT_SECRET=[insert-reddit-client-secret]
+USER_AGENT='Student Research Lab Robot by /u/anon-username' 'https://github.com/Santa-Clara-Media-Lab/student-research-lab-robot'
+USER_NAME=[your-reddit-username]
+PASS_WORD=[your-reddit-password]
 ```
 
 # Deploy Scripts
