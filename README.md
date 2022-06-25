@@ -1,12 +1,11 @@
-# SCU Media Research Lab - Data Science Team
-
+# Reddit Comment Scraper
+ 
 <p align="center">
   <img src="https://github.com/Santa-Clara-Media-Lab/student-research-lab-reddit-comment-scraper/blob/main/assets/educord.png?raw=true">
 </p>
 
 - Using mixed-method approach in Dr. David Jeong's lab to study social media interactions as well as ethical implications of emerging media technology.
-- Utilizing web-scraping techniques to collect digital platform content from **Reddit**, **Instagram**, **Tiktok** and **Twitter** for sentiment analysis.
-- Maintaining Discord server on behalf of the research team.
+- Developed Reddit comment scraper for sentiment analysis on behalf of the SCU Media Research Lab - Data Science Team.
 
 # Installing and setting up the Node.js environment
 
