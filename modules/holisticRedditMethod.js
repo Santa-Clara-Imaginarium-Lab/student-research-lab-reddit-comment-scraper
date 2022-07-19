@@ -10,6 +10,14 @@ const vader = require("vader-sentiment"); // Javascript port of the VADER sentim
 const getPostLimit = 2500; // limit to 2500 reddit posts
 const getCommentsLimit = 1250; // limit to get 1250 comments per thread  
 
+/*
+
+redditFetch is a snoowrap object. snoowrap is a library that wraps the Reddit 
+API. The snoowrap library is a wrapper around the Reddit API. The snoowrap 
+library provides a simple interface to access every Reddit API endpoint.
+
+*/
+
 const redditFetch = new snoowrap({ // Pass in a username and password for script-type apps.
     userAgent: process.env.USER_AGENT, // A user agent header is a string of text that is sent with HTTP requests to identify the program making the request (the program is called a "user agent"). Web browsers commonly send these in order to identify themselves (so the server can tell if you"re using Chrome or Firefox, for example).
     clientId: process.env.CLIENT_ID, // client id needed to access Reddit’s API as a script application
@@ -53,6 +61,37 @@ function weightedScore ( positiveScore, upvotes, postImpressions) {
     return newScore;
 }; 
 
+/*
+
+1. We loop through the subreddits defined in the module exports file.
+2. We loop through the amount of posts defined in the module exports file.
+3. We get a random post from the subreddit.
+4. If the post is not found, we log the subreddit and continue to the next subreddit.
+5. If the post is found, we log the subreddit and continue to the next subreddit.
+6. We then check if the post id is already in the scraped posts array.
+7. If the post id is already in the scraped posts array, we decrement the j counter and continue to the last control flow statement.
+8. If the post id is not in the scraped posts array, we log the post id and continue to the next control flow statement.
+9. We then grab all of the comments under that post in that subreddit.
+10. We then loop through the amount of comments defined in the module exports file.
+11. We get a random comment from the post.
+12. If the comment is not found, we continue to the next comment.
+13. If the comment is found, we log the comment and continue to the next comment.
+14. We then check if the comment id is already in the scraped comments array.
+15. If the comment id is already in the scraped comments array, we continue to the next comment.
+16. If the comment id is not in the scraped comments array, we log the comment id and continue to the next control flow statement.
+17. We then grab the sentiment scores of the comment.
+18. We then calculate the weighted score of the comment.
+19. We then create a results object.
+20. We then push the results object to the data array.
+21. We then create a stream.
+22. We then write the results object to the stream.
+23. We then log the results object.
+24. We then increment the j counter.
+25. We then continue to the next control flow statement.
+26. We then log the amount of comments, posts, and subreddits scraped. 
+
+*/
+ 
 async function scrapeSubreddit() {
     let scrapedPosts = [];
     let data = []; 
